@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scadenzario SSL</title>
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --panel2:#f0f2f5; --text:#1d2330; --muted:#677084; --line:#dde1e8;
+  --accent:#2557d6; --accent-ink:#ffffff;
+  --red:#c62828; --red-bg:#fde8e8; --orange:#b85c00; --orange-bg:#fff0dc; --yellow:#8a6d00; --yellow-bg:#fff8d1;
+  --green:#1f7a3a; --green-bg:#e3f5e8; --violet:#6a3fb5; --violet-bg:#efe7fb; --grey:#5d6575; --grey-bg:#eceef2;
+  --blue:#245a8f; --blue-bg:#e2edf8;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14171d; --panel:#1c2028; --panel2:#232833; --text:#e6e9ef; --muted:#9aa3b5; --line:#313744;
+    --accent:#6b93ff; --accent-ink:#0e1320;
+    --red:#ff8a80; --red-bg:#3a1f22; --orange:#ffb466; --orange-bg:#3a2a18; --yellow:#f0d36a; --yellow-bg:#36311a;
+    --green:#7fd69a; --green-bg:#1a3324; --violet:#c4a6ff; --violet-bg:#2b2340; --grey:#a3abba; --grey-bg:#2a2f3a;
+    --blue:#8fc0f0; --blue-bg:#1c2b3c; --shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 8px;min-width:0}
+textarea{width:100%;min-height:60px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+button{cursor:pointer;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:6px 12px}
+button:hover{background:var(--panel2)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+button.primary:hover{filter:brightness(1.08)}
+button.danger{color:var(--red)}
+button.link{border:none;background:none;padding:0;color:var(--accent);text-decoration:underline}
+button.small{padding:3px 8px;font-size:12.5px}
+button:disabled{opacity:.5;cursor:default}
+
+header{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:16px;padding:8px 16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:16px;letter-spacing:.2px;white-space:nowrap}
+.brand small{font-weight:400;color:var(--muted);margin-left:6px}
+nav{display:flex;gap:2px;flex-wrap:wrap}
+nav a{padding:6px 10px;border-radius:6px;text-decoration:none;color:var(--muted);font-weight:500}
+nav a.on{background:var(--panel2);color:var(--text)}
+.spacer{flex:1}
+.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+.dot.busy{background:var(--orange)} .dot.err{background:var(--red)}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--panel2);cursor:pointer;font-size:12.5px}
+
+main{max-width:1400px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:4px 0 14px}
+h2{font-size:16px;margin:22px 0 10px}
+.muted{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+.pad{padding:14px 16px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.kpi{padding:12px 14px;cursor:pointer;border-left:4px solid var(--line)}
+.kpi .n{font-size:26px;font-weight:700;line-height:1.1}
+.kpi .l{color:var(--muted);font-size:12.5px}
+.kpi.sel{outline:2px solid var(--accent)}
+.k-scaduto{border-left-color:var(--red)} .k-urgente{border-left-color:var(--orange)}
+.k-attenzione{border-left-color:var(--yellow)} .k-dafare{border-left-color:var(--violet)} .k-ok{border-left-color:var(--green)}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.filters input[type=search]{width:240px;max-width:100%}
+.filters label{display:flex;gap:6px;align-items:center;color:var(--muted)}
+
+.tablewrap{overflow-x:auto;border-radius:10px}
+table{border-collapse:collapse;width:100%}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:var(--panel2);white-space:nowrap;position:sticky;top:0}
+th.sort{cursor:pointer} th.sort:hover{color:var(--text)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:color-mix(in srgb,var(--panel2) 60%,transparent)}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.nowrap{white-space:nowrap}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.b-scaduto{background:var(--red-bg);color:var(--red)}
+.b-urgente{background:var(--orange-bg);color:var(--orange)}
+.b-attenzione{background:var(--yellow-bg);color:var(--yellow)}
+.b-ok{background:var(--green-bg);color:var(--green)}
+.b-dafare{background:var(--violet-bg);color:var(--violet)}
+.b-senza{background:var(--blue-bg);color:var(--blue)}
+.b-np,.b-nonserve{background:var(--grey-bg);color:var(--grey)}
+.b-neldvr{background:var(--blue-bg);color:var(--blue)}
+
+/* matrice */
+.matrix{font-size:12px}
+.matrix th,.matrix td{padding:4px 6px;text-align:center;border:1px solid var(--line);white-space:nowrap}
+.matrix th{position:sticky;top:0;z-index:2;writing-mode:vertical-rl;transform:rotate(180deg);height:210px;text-transform:none;letter-spacing:0;font-weight:600}
+.matrix th.az,.matrix td.az{position:sticky;left:0;z-index:1;text-align:left;background:var(--panel);writing-mode:horizontal-tb;transform:none;height:auto;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.matrix th.az{z-index:3;background:var(--panel2)}
+.matrix td.c{cursor:pointer;min-width:52px}
+.c-scaduto{background:var(--red-bg);color:var(--red);font-weight:600}
+.c-urgente{background:var(--orange-bg);color:var(--orange);font-weight:600}
+.c-attenzione{background:var(--yellow-bg);color:var(--yellow)}
+.c-ok{background:var(--green-bg);color:var(--green)}
+.c-dafare{background:var(--violet-bg);color:var(--violet)}
+.c-senza,.c-neldvr{background:var(--blue-bg);color:var(--blue)}
+.c-np,.c-nonserve{color:var(--muted)}
+
+/* scheda azienda */
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 14px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted)}
+.form label.check{flex-direction:row;align-items:center;gap:8px;color:var(--text);font-size:14px}
+.form .full{grid-column:1/-1}
+.adm{border-top:1px solid var(--line)}
+.adm:first-child{border-top:none}
+.adm-head{display:grid;grid-template-columns:minmax(180px,1.6fr) 150px 110px 110px 130px auto;gap:10px;align-items:center;padding:9px 14px;cursor:pointer}
+.adm-head:hover{background:var(--panel2)}
+.adm-head .t{font-weight:600}
+.adm-head .t .caret{display:inline-block;width:14px;color:var(--muted);transition:transform .15s}
+.adm.open .adm-head .t .caret{transform:rotate(90deg)}
+.adm-body{display:none;padding:4px 14px 14px 38px}
+.adm.open .adm-body{display:block}
+.adm-body .settings{display:flex;flex-wrap:wrap;gap:10px 16px;margin:6px 0 12px;align-items:flex-end}
+.adm-body .settings label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.ref{font-size:12px;color:var(--muted);margin:2px 0 8px}
+.adm.dim .adm-head .t{color:var(--muted);font-weight:500}
+@media (max-width:760px){
+  .adm-head{grid-template-columns:1fr auto;}
+  .adm-head .hide-sm{display:none}
+  .adm-body{padding-left:14px}
+}
+
+.banner{padding:10px 14px;border-radius:8px;margin-bottom:12px;border:1px solid}
+.banner.warn{background:var(--orange-bg);color:var(--orange);border-color:color-mix(in srgb,var(--orange) 40%,transparent)}
+.banner.info{background:var(--blue-bg);color:var(--blue);border-color:color-mix(in srgb,var(--blue) 40%,transparent)}
+
+dialog{border:1px solid var(--line);border-radius:12px;padding:0;background:var(--panel);color:var(--text);width:min(560px,calc(100vw - 32px));box-shadow:0 10px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(10,14,22,.45)}
+dialog form{padding:18px}
+dialog h3{margin:0 0 12px;font-size:16px}
+dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:560px}
+.toast{background:var(--text);color:var(--bg);padding:9px 14px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.2);font-size:13.5px}
+.toast.err{background:var(--red);color:#fff}
+
+.setup{max-width:680px;margin:40px auto}
+.setup ol{padding-left:20px} .setup li{margin:6px 0}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px;font-size:12px}
+.log{font-size:12.5px;max-height:260px;overflow:auto}
+.log div{padding:4px 0;border-bottom:1px dashed var(--line)}
+@media (max-width:600px){ main{padding:12px 16px} .bar{gap:8px} .filters input[type=search]{width:100%} }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">Scadenzario SSL<small id="demoTag"></small></div>
+    <nav id="nav">
+      <a href="#/scadenze" data-r="scadenze">Scadenze</a>
+      <a href="#/aziende" data-r="aziende">Aziende</a>
+      <a href="#/matrice" data-r="matrice">Matrice</a>
+      <a href="#/impostazioni" data-r="impostazioni">Impostazioni</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="status">
+      <span class="dot" id="dot"></span><span id="syncTxt">—</span>
+      <button class="small" id="btnRefresh" title="Rilegge i dati dalla cartella condivisa">Aggiorna</button>
+      <span class="chip" id="userChip" title="Cambia nome utente">—</span>
+    </div>
+  </div>
+</header>
+<main id="view"></main>
+<div id="toast"></div>
+
+<!-- Dialog generico -->
+<dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+
+<script>
+"use strict";
+/* =========================================================================
+   Scadenzario SSL – app a file singolo.
+   Dati: una cartella (es. condivisa su Dropbox) con
+     config.json            catalogo adempimenti + soglie
+     aziende/<id>.json      un file per azienda
+   Ogni modifica rilegge il file aggiornato, applica la modifica e lo riscrive:
+   così le modifiche di colleghi su altre parti dell'azienda non vanno perse.
+   ========================================================================= */
+
+const APP_VERSION = "0.1";
+const POLL_MS = 30000;
+const STATI_RIGA = {C:"Concluso e consegnato", DC:"Da controllare e consegnare", I:"Incompleto / da concludere", S:"Superato / da aggiornare", A:"Assente / da fare"};
+const APPLICABILITA = {attivo:"Applicabile", np:"Non pertinente (NP)", nel_dvr:"Valutato nel DVR", non_serve:"Non serve", da_gestire:"Da gestire"};
+const ESITI = {
+  scaduto:{l:"Scaduto",c:"scaduto"}, urgente:{l:"Entro 30 gg",c:"urgente"}, attenzione:{l:"Entro 180 gg",c:"attenzione"},
+  ok:{l:"In regola",c:"ok"}, dafare:{l:"Da fare",c:"dafare"}, senza:{l:"Senza scadenza",c:"senza"},
+  np:{l:"NP",c:"np"}, nel_dvr:{l:"Nel DVR",c:"neldvr"}, non_serve:{l:"Non serve",c:"nonserve"}
+};
+
+const S = {
+  store:null, config:null, aziende:new Map(), mtimes:new Map(), conflitti:[], errori:[],
+  utente: lsGet("ssl.utente") || "", demo:false, busy:0, ultimoSync:null,
+  filtri: Object.assign({q:"", adm:"", esito:"critici", rspp:false, ordina:"scadenza"}, JSON.parse(lsGet("ssl.filtri")||"{}")),
+  filtriAz:{q:"", archiviate:false}, aperti:new Set(), dirty:false, route:""
+};
+
+/* ---------------------------- utilità ---------------------------------- */
+function lsGet(k){ try{return localStorage.getItem(k)}catch(e){return null} }
+function lsSet(k,v){ try{localStorage.setItem(k,v)}catch(e){} }
+const $ = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad2 = n => String(n).padStart(2,"0");
+function oggiISO(){ const d=new Date(); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+function oraISO(){ return new Date().toISOString(); }
+function parseISO(s){ if(!s||!/^\d{4}-\d{2}-\d{2}$/.test(s)) return null; const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); }
+function fmtData(s){ const d=parseISO(s); return d?`${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`:""; }
+function fmtMeseAnno(s){ const d=parseISO(s); return d?`${pad2(d.getMonth()+1)}/${String(d.getFullYear()).slice(2)}`:""; }
+function fmtQuando(iso){ if(!iso) return ""; const d=new Date(iso); if(isNaN(d)) return iso; return d.toLocaleString("it-IT",{dateStyle:"short",timeStyle:"short"}); }
+function addAnni(iso,anni){ const d=parseISO(iso); if(!d) return null; const t=new Date(d.getFullYear()+Math.floor(anni), d.getMonth()+Math.round((anni%1)*12), d.getDate());
+  if(t.getDate()!==d.getDate()) t.setDate(0); return `${t.getFullYear()}-${pad2(t.getMonth()+1)}-${pad2(t.getDate())}`; }
+function giorniTra(isoA,isoB){ return Math.round((parseISO(isoB)-parseISO(isoA))/86400000); }
+function slug(s){ return String(s).normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"azienda"; }
+function uid(){ return "r"+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function hash(str){ let h=5381; for(let i=0;i<str.length;i++) h=((h<<5)+h+str.charCodeAt(i))|0; return (h>>>0).toString(36); }
+function rowKey(r){ return r.id || ("h"+hash([r.data,r.prot,r.rev,r.stato,r.note].join("|"))); }
+function toast(msg,tipo){ const t=document.createElement("div"); t.className="toast"+(tipo?" "+tipo:""); t.textContent=msg; $("#toast").appendChild(t); setTimeout(()=>t.remove(), tipo==="err"?8000:3500); }
+
+/* --------------------------- storage ----------------------------------- */
+// Funziona sia con una cartella reale (File System Access API: Chrome/Edge)
+// sia con l'Origin Private File System del browser (modalità demo).
+class FolderStore{
+  constructor(dir,label){ this.dir=dir; this.label=label; }
+  async init(){ this.az = await this.dir.getDirectoryHandle("aziende",{create:true}); }
+  async _read(h){ const f=await h.getFile(); return {data:JSON.parse(await f.text()), mtime:f.lastModified}; }
+  async _write(h,data){ const w=await h.createWritable(); await w.write(JSON.stringify(data,null,1)); await w.close(); const f=await h.getFile(); return f.lastModified; }
+  async getConfig(){ try{ return (await this._read(await this.dir.getFileHandle("config.json"))).data; }catch(e){ if(e.name==="NotFoundError") return null; throw e; } }
+  async saveConfig(c){ return this._write(await this.dir.getFileHandle("config.json",{create:true}), c); }
+  async list(){
+    const files=[], conflitti=[];
+    for await (const [name,h] of this.az.entries()){
+      if(h.kind!=="file") continue;
+      if(/^[a-z0-9-]+\.json$/.test(name)){ const f=await h.getFile(); files.push({id:name.slice(0,-5), mtime:f.lastModified}); }
+      else if(/\.json$/i.test(name)) conflitti.push(name);
+    }
+    return {files,conflitti};
+  }
+  async read(id){ return this._read(await this.az.getFileHandle(id+".json")); }
+  async write(id,data){ return this._write(await this.az.getFileHandle(id+".json",{create:true}), data); }
+  async exists(id){ try{ await this.az.getFileHandle(id+".json"); return true; }catch(e){ return false; } }
+}
+
+// Salvataggio dell'handle della cartella tra una sessione e l'altra (IndexedDB)
+const idb = {
+  open(){ return new Promise((res,rej)=>{ const r=indexedDB.open("scadenzario-ssl",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); },
+  async get(k){ try{ const db=await this.open(); return await new Promise(res=>{ const q=db.transaction("kv").objectStore("kv").get(k); q.onsuccess=()=>res(q.result); q.onerror=()=>res(null); }); }catch(e){ return null; } },
+  async set(k,v){ try{ const db=await this.open(); await new Promise(res=>{ const t=db.transaction("kv","readwrite"); t.objectStore("kv").put(v,k); t.oncomplete=res; t.onerror=res; }); }catch(e){} },
+  async del(k){ try{ const db=await this.open(); await new Promise(res=>{ const t=db.transaction("kv","readwrite"); t.objectStore("kv").delete(k); t.oncomplete=res; t.onerror=res; }); }catch(e){} }
+};
+
+/* ----------------------------- logica ---------------------------------- */
+function catalogo(){ return (S.config?.catalogo)||[]; }
+function catById(id){ return catalogo().find(c=>c.id===id); }
+function soglie(){ return Object.assign({urgente:30, attenzione:180}, S.config?.sogliaGiorni||{}); }
+
+function calcola(az, cid){
+  const v = az.adempimenti?.[cid] || {applicabilita:"np", storico:[]};
+  const cat = catById(cid) || {};
+  const appl = v.applicabilita || "np";
+  const date = (v.storico||[]).map(r=>r.data).filter(Boolean).sort();
+  const ultima = date[date.length-1] || null;
+  const per = (v.periodicitaAnni!==undefined && v.periodicitaAnni!==null && v.periodicitaAnni!=="") ? Number(v.periodicitaAnni) : cat.periodicitaAnni;
+  let scadenza = null, giorni = null, esito;
+  if(appl==="np") esito="np"; else if(appl==="nel_dvr") esito="nel_dvr"; else if(appl==="non_serve") esito="non_serve";
+  else if(appl==="da_gestire") esito="dafare";
+  else {
+    if(v.scadenzaManuale) scadenza=v.scadenzaManuale;
+    else if(ultima && per) scadenza=addAnni(ultima, per);
+    if(!ultima && !scadenza) esito="dafare";
+    else if(!scadenza) esito="senza";
+    else { giorni=giorniTra(oggiISO(), scadenza); const s=soglie();
+      esito = giorni<0?"scaduto": giorni<=s.urgente?"urgente": giorni<=s.attenzione?"attenzione":"ok"; }
+  }
+  return {cid, nome:cat.nome||cid, v, appl, ultima, per, scadenza, giorni, esito};
+}
+function tutteLeVoci(){
+  const out=[];
+  for(const az of S.aziende.values()){
+    if(az.attiva===false) continue;
+    for(const c of catalogo()) out.push(Object.assign(calcola(az,c.id),{az}));
+  }
+  return out;
+}
+function riepilogoAzienda(az){
+  const r={scaduto:0,urgente:0,attenzione:0,dafare:0,prossima:null};
+  for(const c of catalogo()){ const x=calcola(az,c.id); if(r[x.esito]!==undefined) r[x.esito]++;
+    if(x.scadenza && (x.giorni??0)>=0 && (!r.prossima || x.scadenza<r.prossima.scadenza)) r.prossima=x; }
+  return r;
+}
+
+/* -------------------------- caricamento -------------------------------- */
+function setBusy(d){ S.busy+=d; $("#dot").className="dot"+(S.busy>0?" busy":""); }
+function aggiornaStato(){
+  $("#syncTxt").textContent = S.store ? `${S.store.label} · ${S.aziende.size} aziende · agg. ${S.ultimoSync?S.ultimoSync.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):"—"}` : "nessuna cartella";
+  $("#userChip").textContent = S.utente ? "👤 "+S.utente : "👤 imposta nome";
+  $("#demoTag").textContent = S.demo ? "DEMO – dati di prova" : "";
+}
+async function caricaTutto(forza){
+  if(!S.store) return false;
+  setBusy(1);
+  let cambiato=false;
+  try{
+    const cfg = await S.store.getConfig();
+    if(cfg && JSON.stringify(cfg)!==JSON.stringify(S.config)){ S.config=cfg; cambiato=true; }
+    if(!S.config){ S.config = configBase(); await S.store.saveConfig(S.config); cambiato=true; }
+    const {files,conflitti} = await S.store.list();
+    S.conflitti=conflitti; S.errori=[];
+    const presenti=new Set(files.map(f=>f.id));
+    for(const id of [...S.aziende.keys()]) if(!presenti.has(id)){ S.aziende.delete(id); S.mtimes.delete(id); cambiato=true; }
+    const daLeggere = files.filter(f=>forza || S.mtimes.get(f.id)!==f.mtime);
+    await Promise.all(daLeggere.map(async f=>{
+      try{ const {data,mtime}=await S.store.read(f.id); data.id=f.id; S.aziende.set(f.id,data); S.mtimes.set(f.id,mtime); cambiato=true; }
+      catch(e){ S.errori.push(`${f.id}.json: ${e.message}`); }
+    }));
+    S.ultimoSync=new Date(); $("#dot").classList.remove("err");
+  }catch(e){ $("#dot").classList.add("err"); toast("Errore lettura dati: "+e.message,"err"); }
+  finally{ setBusy(-1); aggiornaStato(); }
+  return cambiato;
+}
+async function poll(){
+  if(!S.store || document.hidden || S.busy>0) return;
+  const cambiato = await caricaTutto(false);
+  if(!cambiato) return;
+  if(S.dirty || $("#dlg").open || (document.activeElement && $("#view").contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))){
+    mostraAvvisoAggiornamenti(); return;
+  }
+  render();
+}
+function mostraAvvisoAggiornamenti(){
+  if($("#avvisoAgg")) return;
+  const b=document.createElement("div"); b.id="avvisoAgg"; b.className="banner info";
+  b.innerHTML=`Un collega ha aggiornato dei dati. <button class="small" type="button">Mostra aggiornamenti</button>`;
+  b.querySelector("button").onclick=()=>{ if(S.dirty && !confirm("Hai modifiche non salvate nell'anagrafica. Scartarle?")) return; S.dirty=false; render(); };
+  $("#view").prepend(b);
+}
+
+/* ------------------------- scrittura sicura ---------------------------- */
+async function chiediUtente(){
+  if(S.utente) return true;
+  const nome = await dialogo({titolo:"Chi sei?", corpo:`<p class="muted">Il nome viene salvato nel registro di ogni modifica, così il team sa chi ha fatto cosa.</p>
+    <label>Nome e cognome (o sigla)<br><input name="nome" required autofocus style="width:100%"></label>`, ok:"Salva"});
+  if(!dialogoOk(nome) || !nome.nome.trim()) return false;
+  S.utente=nome.nome.trim(); lsSet("ssl.utente",S.utente); aggiornaStato(); return true;
+}
+// Rilegge il file, applica fn() sulla versione più recente, salva.
+async function modifica(id, cosa, fn){
+  if(!await chiediUtente()) return false;
+  setBusy(1);
+  try{
+    let fresco;
+    try{ fresco=(await S.store.read(id)).data; }
+    catch(e){ if(e.name==="NotFoundError") throw new Error("il file di questa azienda non esiste più (spostato o eliminato da un collega?)"); throw e; }
+    const prima=S.aziende.get(id);
+    const altri = prima && fresco._meta && prima._meta && fresco._meta.versione!==prima._meta.versione ? fresco._meta.modificatoDa : null;
+    const esito = fn(fresco);
+    if(esito===false) return false;
+    fresco._meta={versione:(fresco._meta?.versione||0)+1, modificatoIl:oraISO(), modificatoDa:S.utente};
+    fresco.registro=[{quando:oraISO(), chi:S.utente, cosa}, ...(fresco.registro||[])].slice(0,300);
+    delete fresco.id; const mtime=await S.store.write(id,fresco); fresco.id=id;
+    S.aziende.set(id,fresco); S.mtimes.set(id,mtime);
+    toast(altri ? `Salvato. Nel frattempo ${altri} aveva modificato questa azienda: anche le sue modifiche sono state mantenute.` : "Salvato");
+    return true;
+  }catch(e){ toast("Non salvato: "+e.message,"err"); return false; }
+  finally{ setBusy(-1); render(); }
+}
+async function modificaConfig(cosa, fn){
+  if(!await chiediUtente()) return false;
+  setBusy(1);
+  try{
+    const fresco = (await S.store.getConfig()) || configBase();
+    fn(fresco);
+    fresco._meta={versione:(fresco._meta?.versione||0)+1, modificatoIl:oraISO(), modificatoDa:S.utente, ultimaModifica:cosa};
+    await S.store.saveConfig(fresco); S.config=fresco; toast("Impostazioni salvate"); return true;
+  }catch(e){ toast("Non salvato: "+e.message,"err"); return false; }
+  finally{ setBusy(-1); render(); }
+}
+function voce(az,cid){ az.adempimenti=az.adempimenti||{}; return az.adempimenti[cid]=az.adempimenti[cid]||{applicabilita:"attivo",storico:[],note:""}; }
+
+/* ----------------------------- dialoghi -------------------------------- */
+function dialogo({titolo,corpo,ok="OK",annulla="Annulla",pericolo=false}){
+  return new Promise(res=>{
+    const d=$("#dlg"), f=$("#dlgForm");
+    f.innerHTML=`<h3>${esc(titolo)}</h3>${corpo}<div class="actions"><button value="cancel" formnovalidate>${esc(annulla)}</button><button value="ok" class="${pericolo?"danger":"primary"}">${esc(ok)}</button></div>`;
+    d.onclose=()=>{ if(d.returnValue==="ok"){ const o={__ok:true}; new FormData(f).forEach((v,k)=>o[k]=v); $$("input[type=checkbox]",f).forEach(c=>o[c.name]=c.checked); res(o);} else res(null); };
+    d.returnValue=""; d.showModal(); const a=$("[autofocus]",f); if(a) a.focus();
+  });
+}
+const dialogoOk = r => r && r.__ok;
+function opzioni(obj,sel){ return Object.entries(obj).map(([k,l])=>`<option value="${esc(k)}"${k===sel?" selected":""}>${esc(l)}</option>`).join(""); }
+function formRiga(r={}){
+  return `<div class="form">
+    <label>Data emissione / revisione<input type="date" name="data" value="${esc(r.data||oggiISO())}" required></label>
+    <label>Rev. n°<input name="rev" value="${esc(r.rev||"")}"></label>
+    <label>Prot. n° (ove previsto)<input name="prot" value="${esc(r.prot||"")}"></label>
+    <label>Stato<select name="stato"><option value="">—</option>${opzioni(STATI_RIGA, r.stato??"C")}</select></label>
+    <label class="full">Note<textarea name="note">${esc(r.note||"")}</textarea></label></div>`;
+}
+async function registraAggiornamento(id,cid){
+  const az=S.aziende.get(id), x=calcola(az,cid);
+  const revSucc = (()=>{ const r=(x.v.storico||[]).filter(r=>r.data).sort((a,b)=>a.data<b.data?-1:1).pop(); const n=parseInt(r?.rev,10); return isNaN(n)?"":String(n+1); })();
+  const r=await dialogo({titolo:`${az.nome} · ${x.nome}: registra aggiornamento`, corpo:
+    `<p class="muted" style="margin-top:0">Ultima data: ${fmtData(x.ultima)||"nessuna"}${x.per?` · periodicità ${x.per} anni`:""}</p>`+formRiga({rev:revSucc}), ok:"Registra"});
+  if(!dialogoOk(r)) return;
+  await modifica(id, `${x.nome}: registrato aggiornamento del ${fmtData(r.data)}${r.rev?" (rev. "+r.rev+")":""}`, az=>{
+    const v=voce(az,cid); if(["np","da_gestire","non_serve"].includes(v.applicabilita)) v.applicabilita="attivo";
+    v.storico=v.storico||[]; v.storico.push({id:uid(), data:r.data, rev:r.rev.trim(), prot:r.prot.trim(), stato:r.stato, note:r.note.trim()});
+    delete v.scadenzaManuale;
+  });
+}
+
+/* ------------------------------ router --------------------------------- */
+window.addEventListener("hashchange", ()=>{ if(S.dirty && !confirm("Hai modifiche non salvate nell'anagrafica. Uscire senza salvare?")){ history.replaceState(null,"",S.route); return; } S.dirty=false; render(); window.scrollTo(0,0); });
+function render(){
+  aggiornaStato();
+  const v=$("#view");
+  if(!S.store){ v.innerHTML=vistaSetup(); bindSetup(); return; }
+  const h=location.hash||"#/scadenze"; S.route=h;
+  const [_,r,arg]=h.split("/");
+  $$("#nav a").forEach(a=>a.classList.toggle("on", a.dataset.r===r || (r==="azienda"&&a.dataset.r==="aziende")));
+  let html=bannerGenerali();
+  if(r==="aziende") html+=vistaAziende();
+  else if(r==="azienda") html+=vistaAzienda(decodeURIComponent(arg||""));
+  else if(r==="matrice") html+=vistaMatrice();
+  else if(r==="impostazioni") html+=vistaImpostazioni();
+  else html+=vistaScadenze();
+  v.innerHTML=html;
+  bind(r, decodeURIComponent(arg||""));
+}
+function bannerGenerali(){
+  let h="";
+  if(S.conflitti.length) h+=`<div class="banner warn"><b>Attenzione: Dropbox ha creato delle copie in conflitto</b> (due persone hanno salvato la stessa azienda quasi nello stesso istante). Apri i file nella cartella <code>aziende</code>, verifica le differenze e cancella la copia: <br>${S.conflitti.map(esc).join("<br>")}</div>`;
+  if(S.errori.length) h+=`<div class="banner warn"><b>Alcuni file non sono leggibili</b> (forse sincronizzazione in corso, riprova tra poco):<br>${S.errori.map(esc).join("<br>")}</div>`;
+  return h;
+}
+
+/* ------------------------------ setup ---------------------------------- */
+function vistaSetup(){
+  const fsa = "showDirectoryPicker" in window;
+  return `<div class="setup panel pad">
+    <h1>Benvenuto nello Scadenzario SSL</h1>
+    <p>L'app non ha un server: legge e scrive i dati in una <b>cartella condivisa</b> (per esempio su Dropbox), un file per azienda. Ognuno del team apre questa stessa pagina e seleziona la stessa cartella.</p>
+    <ol>
+      <li>Sul tuo PC deve essere installato e attivo <b>Dropbox</b> (o OneDrive / Google Drive per desktop), con la cartella condivisa sincronizzata.</li>
+      <li>Premi <b>Seleziona cartella dati</b> e scegli la cartella condivisa (quella che contiene <code>config.json</code> e la sottocartella <code>aziende</code>). Se è vuota, l'app la prepara.</li>
+      <li>Il browser chiede il permesso di modifica: conferma. Dalla volta successiva basta un clic su "Riconnetti".</li>
+    </ol>
+    ${fsa?"":`<div class="banner warn">Questo browser non permette di aprire cartelle locali. Usa <b>Google Chrome</b> o <b>Microsoft Edge</b> su PC/Mac. Puoi comunque provare la demo.</div>`}
+    <div class="row" style="margin-top:16px">
+      <button class="primary" id="btnPick" ${fsa?"":"disabled"}>Seleziona cartella dati</button>
+      <span id="riconnetti"></span>
+      <button id="btnDemo">Prova con dati di esempio</button>
+    </div>
+    <p class="muted" style="margin-top:18px;font-size:12.5px">Versione ${APP_VERSION}. I dati non passano da GitHub né da altri server: restano nella vostra cartella condivisa.</p>
+  </div>`;
+}
+async function bindSetup(){
+  $("#btnPick").onclick=scegliCartella;
+  $("#btnDemo").onclick=avviaDemo;
+  const h=await idb.get("cartella");
+  if(h && h.kind==="directory"){
+    $("#riconnetti").innerHTML=`<button id="btnRe">Riconnetti “${esc(h.name)}”</button>`;
+    $("#btnRe").onclick=async()=>{ try{ if(await h.requestPermission({mode:"readwrite"})==="granted") await apri(h,h.name); }catch(e){ toast(e.message,"err"); } };
+  }
+}
+async function scegliCartella(){
+  try{
+    const h=await window.showDirectoryPicker({id:"scadenzario-ssl", mode:"readwrite"});
+    const ha = await (async()=>{ try{ await h.getFileHandle("config.json"); return true; }catch(e){ return false; } })();
+    if(!ha){ let n=0; for await (const _ of h.entries()) n++;
+      if(n>0 && !confirm(`La cartella “${h.name}” non contiene config.json. Vuoi inizializzarla come archivio dello Scadenzario? (verranno creati config.json e la sottocartella aziende)`)) return; }
+    await idb.set("cartella",h); await apri(h,h.name);
+  }catch(e){ if(e.name!=="AbortError") toast(e.message,"err"); }
+}
+async function apri(dir,label,demo=false){
+  const st=new FolderStore(dir,label); await st.init();
+  S.store=st; S.demo=demo; S.aziende.clear(); S.mtimes.clear(); S.config=null;
+  await caricaTutto(true);
+  if(!location.hash) location.hash="#/scadenze";
+  render();
+  if(!S.utente) chiediUtente();
+}
+async function avviaDemo(){
+  try{
+    const root=await navigator.storage.getDirectory();
+    const dir=await root.getDirectoryHandle("demo-scadenzario",{create:true});
+    const st=new FolderStore(dir,"Demo"); await st.init();
+    const {files}=await st.list();
+    if(!files.length){ await st.saveConfig(configBase()); for(const a of datiDemo()) await st.write(a.id,a); }
+    await apri(dir,"Demo (solo su questo PC)",true);
+  }catch(e){ toast("Demo non disponibile in questo browser: "+e.message,"err"); }
+}
+
+/* ---------------------------- vista scadenze ---------------------------- */
+function filtraVoci(){
+  const f=S.filtri, q=f.q.trim().toLowerCase();
+  let voci=tutteLeVoci().filter(x=>!["np","non_serve"].includes(x.esito));
+  if(f.rspp) voci=voci.filter(x=>x.az.rsppStudio);
+  if(f.adm) voci=voci.filter(x=>x.cid===f.adm);
+  if(q) voci=voci.filter(x=>(x.az.nome+" "+x.nome+" "+(x.az.referente||"")).toLowerCase().includes(q));
+  return voci;
+}
+function vistaScadenze(){
+  const tutte=filtraVoci(), f=S.filtri;
+  const conta=e=>tutte.filter(x=>x.esito===e).length;
+  const k=[["critici","Critici (scaduti + 30 gg)",conta("scaduto")+conta("urgente"),"k-scaduto"],["scaduto","Scaduti",conta("scaduto"),"k-scaduto"],["urgente","Entro 30 giorni",conta("urgente"),"k-urgente"],["attenzione","Entro 180 giorni",conta("attenzione"),"k-attenzione"],["dafare","Da fare / mai eseguiti",conta("dafare"),"k-dafare"],["ok","In regola",conta("ok"),"k-ok"],["tutti","Tutti",tutte.length,""]];
+  let voci=tutte;
+  if(f.esito==="critici") voci=voci.filter(x=>x.esito==="scaduto"||x.esito==="urgente");
+  else if(f.esito!=="tutti") voci=voci.filter(x=>x.esito===f.esito);
+  const ord={azienda:(a,b)=>a.az.nome.localeCompare(b.az.nome)||a.nome.localeCompare(b.nome),
+             adempimento:(a,b)=>a.nome.localeCompare(b.nome)||a.az.nome.localeCompare(b.az.nome),
+             scadenza:(a,b)=>(a.scadenza||"9999").localeCompare(b.scadenza||"9999")||a.az.nome.localeCompare(b.az.nome)};
+  voci.sort(ord[f.ordina]||ord.scadenza);
+  const righe=voci.slice(0,1500).map(x=>`<tr>
+    <td><a href="#/azienda/${encodeURIComponent(x.az.id)}">${esc(x.az.nome)}</a>${x.az.rsppStudio?' <span class="muted" title="RSPP dello studio">· RSPP</span>':""}</td>
+    <td>${esc(x.nome)}</td>
+    <td class="nowrap">${fmtData(x.ultima)}</td>
+    <td class="num">${x.per?x.per+" a":"—"}</td>
+    <td class="nowrap">${fmtData(x.scadenza)}${x.v.scadenzaManuale?' <span class="muted" title="Scadenza inserita a mano">✎</span>':""}</td>
+    <td class="num">${x.giorni===null?"":x.giorni<0?`${-x.giorni} gg fa`:`tra ${x.giorni} gg`}</td>
+    <td><span class="badge b-${ESITI[x.esito].c}">${ESITI[x.esito].l}</span></td>
+    <td class="nowrap"><button class="small" data-reg="${esc(x.az.id)}|${esc(x.cid)}" title="Registra una nuova revisione / esecuzione">+ Registra</button></td></tr>`).join("");
+  return `<h1>Scadenze</h1>
+  <div class="kpis">${k.map(([id,l,n,c])=>`<div class="panel kpi ${c} ${f.esito===id?"sel":""}" data-esito="${id}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("")}</div>
+  <div class="filters">
+    <input type="search" id="fq" placeholder="Cerca azienda o adempimento…" value="${esc(f.q)}">
+    <select id="fadm"><option value="">Tutti gli adempimenti</option>${catalogo().map(c=>`<option value="${esc(c.id)}"${c.id===f.adm?" selected":""}>${esc(c.nome)}</option>`).join("")}</select>
+    <select id="ford">${opzioni({scadenza:"Ordina per scadenza",azienda:"Ordina per azienda",adempimento:"Ordina per adempimento"},f.ordina)}</select>
+    <label><input type="checkbox" id="frspp" ${f.rspp?"checked":""}> solo aziende con RSPP dello studio</label>
+    <span class="spacer"></span>
+    <button id="btnCsv">Esporta CSV (Excel)</button>
+  </div>
+  <div class="panel tablewrap"><table>
+    <thead><tr><th>Azienda</th><th>Adempimento</th><th>Ultima data</th><th class="num">Period.</th><th>Scadenza</th><th class="num">Giorni</th><th>Stato</th><th></th></tr></thead>
+    <tbody>${righe||`<tr><td colspan="8" class="empty">Nessuna voce con questi filtri.</td></tr>`}</tbody></table></div>
+  <p class="muted" style="font-size:12.5px">“Da fare” = adempimento applicabile ma senza nessuna data registrata, oppure marcato “da gestire”. Le voci NP e “non serve” non compaiono qui: le vedi nella scheda azienda o nella matrice.</p>`;
+}
+function bindScadenze(){
+  const salva=()=>{ lsSet("ssl.filtri",JSON.stringify(S.filtri)); render(); };
+  $$(".kpi").forEach(el=>el.onclick=()=>{ S.filtri.esito=el.dataset.esito; salva(); });
+  let t; $("#fq").oninput=e=>{ clearTimeout(t); t=setTimeout(()=>{ S.filtri.q=e.target.value; salva(); const i=$("#fq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length); },250); };
+  $("#fadm").onchange=e=>{ S.filtri.adm=e.target.value; salva(); };
+  $("#ford").onchange=e=>{ S.filtri.ordina=e.target.value; salva(); };
+  $("#frspp").onchange=e=>{ S.filtri.rspp=e.target.checked; salva(); };
+  $("#btnCsv").onclick=esportaCsv;
+}
+function esportaCsv(){
+  const righe=[["Azienda","RSPP studio","Adempimento","Applicabilità","Ultima data","Periodicità (anni)","Scadenza","Giorni","Stato"]];
+  for(const x of tutteLeVoci().sort((a,b)=>a.az.nome.localeCompare(b.az.nome)))
+    righe.push([x.az.nome, x.az.rsppStudio?"SI":"", x.nome, APPLICABILITA[x.appl]||x.appl, fmtData(x.ultima), x.per??"", fmtData(x.scadenza), x.giorni??"", ESITI[x.esito].l]);
+  const csv="﻿"+righe.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";")).join("\r\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download=`scadenzario_${oggiISO()}.csv`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+/* ---------------------------- vista aziende ----------------------------- */
+function vistaAziende(){
+  const f=S.filtriAz, q=f.q.trim().toLowerCase();
+  let az=[...S.aziende.values()].filter(a=>f.archiviate || a.attiva!==false);
+  if(q) az=az.filter(a=>(a.nome+" "+(a.referente||"")+" "+(a.ateco||"")).toLowerCase().includes(q));
+  az.sort((a,b)=>a.nome.localeCompare(b.nome));
+  const righe=az.map(a=>{ const r=riepilogoAzienda(a); return `<tr>
+    <td><a href="#/azienda/${encodeURIComponent(a.id)}"><b>${esc(a.nome)}</b></a>${a.attiva===false?' <span class="badge b-np">archiviata</span>':""}</td>
+    <td>${a.rsppStudio?"Sì":""}</td><td>${esc(a.referente||"")}</td>
+    <td class="num">${r.scaduto?`<span class="badge b-scaduto">${r.scaduto}</span>`:""}</td>
+    <td class="num">${r.urgente?`<span class="badge b-urgente">${r.urgente}</span>`:""}</td>
+    <td class="num">${r.attenzione?`<span class="badge b-attenzione">${r.attenzione}</span>`:""}</td>
+    <td class="num">${r.dafare?`<span class="badge b-dafare">${r.dafare}</span>`:""}</td>
+    <td>${r.prossima?`${esc(r.prossima.nome)} · ${fmtData(r.prossima.scadenza)}`:""}</td>
+    <td class="muted nowrap" style="font-size:12.5px">${esc(a._meta?.modificatoDa||"")} ${fmtQuando(a._meta?.modificatoIl)}</td></tr>`; }).join("");
+  return `<div class="row" style="justify-content:space-between"><h1>Aziende <span class="muted" style="font-weight:400">(${az.length})</span></h1><button class="primary" id="btnNuova">+ Nuova azienda</button></div>
+  <div class="filters"><input type="search" id="faq" placeholder="Cerca per nome, referente, ATECO…" value="${esc(f.q)}">
+  <label><input type="checkbox" id="farch" ${f.archiviate?"checked":""}> mostra archiviate</label></div>
+  <div class="panel tablewrap"><table><thead><tr><th>Azienda</th><th>RSPP studio</th><th>Referente</th><th class="num">Scaduti</th><th class="num">30 gg</th><th class="num">180 gg</th><th class="num">Da fare</th><th>Prossima scadenza</th><th>Ultima modifica</th></tr></thead>
+  <tbody>${righe||`<tr><td colspan="9" class="empty">Nessuna azienda. Premi “Nuova azienda” o importa l'Excel con lo script.</td></tr>`}</tbody></table></div>`;
+}
+function bindAziende(){
+  let t; $("#faq").oninput=e=>{ clearTimeout(t); t=setTimeout(()=>{ S.filtriAz.q=e.target.value; render(); const i=$("#faq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length); },250); };
+  $("#farch").onchange=e=>{ S.filtriAz.archiviate=e.target.checked; render(); };
+  $("#btnNuova").onclick=nuovaAzienda;
+}
+async function nuovaAzienda(){
+  if(!await chiediUtente()) return;
+  const r=await dialogo({titolo:"Nuova azienda", corpo:`<div class="form">
+    <label class="full">Ragione sociale<input name="nome" required autofocus></label>
+    <label>Codice ATECO<input name="ateco"></label>
+    <label>Referente interno<input name="referente" placeholder="chi segue l'azienda"></label>
+    <label class="check full"><input type="checkbox" name="rsppStudio"> RSPP dello studio</label></div>
+    <p class="muted" style="font-size:12.5px">Tutti gli adempimenti partono come “Non pertinente”: li attivi poi dalla scheda.</p>`, ok:"Crea"});
+  if(!dialogoOk(r)||!r.nome.trim()) return;
+  setBusy(1);
+  try{
+    let id=slug(r.nome), n=2; while(S.aziende.has(id) || await S.store.exists(id)) id=slug(r.nome)+"-"+(n++);
+    const ad={}; for(const c of catalogo()) ad[c.id]={applicabilita: c.id==="dvr"?"attivo":"np", storico:[], note:""};
+    const a={nome:r.nome.trim(), attiva:true, rsppStudio:!!r.rsppStudio, referente:r.referente.trim(), ateco:r.ateco.trim(), soggettaCPI:"", rischioIncendio:"", classificazionePS:"", note:"",
+      adempimenti:ad, _meta:{versione:1, modificatoIl:oraISO(), modificatoDa:S.utente}, registro:[{quando:oraISO(),chi:S.utente,cosa:"Azienda creata"}]};
+    const mt=await S.store.write(id,a); a.id=id; S.aziende.set(id,a); S.mtimes.set(id,mt);
+    location.hash="#/azienda/"+encodeURIComponent(id);
+  }catch(e){ toast("Non creata: "+e.message,"err"); } finally{ setBusy(-1); }
+}
+
+/* ---------------------------- scheda azienda ---------------------------- */
+function vistaAzienda(id){
+  const a=S.aziende.get(id);
+  if(!a) return `<div class="empty">Azienda non trovata. <a href="#/aziende">Torna all'elenco</a></div>`;
+  const voci=catalogo().map(c=>calcola(a,c.id));
+  const attivi=voci.filter(x=>!["np","non_serve"].includes(x.esito)), altri=voci.filter(x=>["np","non_serve"].includes(x.esito));
+  const blocco=x=>{
+    const cat=catById(x.cid)||{}, aperto=S.aperti.has(id+"|"+x.cid);
+    const st=(x.v.storico||[]).slice().sort((p,q)=>(q.data||"").localeCompare(p.data||""));
+    return `<div class="adm ${aperto?"open":""} ${["np","non_serve","nel_dvr"].includes(x.esito)?"dim":""}" data-cid="${esc(x.cid)}">
+      <div class="adm-head" data-toggle="${esc(x.cid)}">
+        <div class="t"><span class="caret">▸</span>${esc(x.nome)}</div>
+        <div class="hide-sm muted">${esc(APPLICABILITA[x.appl]||x.appl)}</div>
+        <div class="hide-sm">${fmtData(x.ultima)||'<span class="muted">—</span>'}</div>
+        <div class="hide-sm">${fmtData(x.scadenza)||'<span class="muted">—</span>'}</div>
+        <div><span class="badge b-${ESITI[x.esito].c}">${ESITI[x.esito].l}${x.giorni!==null&&x.giorni>=0&&x.esito!=="ok"?` · ${x.giorni} gg`:""}</span></div>
+        <div class="hide-sm" style="text-align:right"><button class="small" data-reg="${esc(id)}|${esc(x.cid)}">+ Registra</button></div>
+      </div>
+      <div class="adm-body">
+        ${cat.riferimento?`<div class="ref">📖 ${esc(cat.riferimento)}${cat.prassi?" · <i>periodicità di prassi dello studio, non fissata dalla norma</i>":""}</div>`:""}
+        <div class="settings">
+          <label>Applicabilità<select data-set="applicabilita">${opzioni(APPLICABILITA,x.appl)}</select></label>
+          <label>Periodicità (anni)<input type="number" min="0" step="0.5" style="width:110px" data-set="periodicitaAnni" value="${esc(x.v.periodicitaAnni??"")}" placeholder="std: ${cat.periodicitaAnni??"nessuna"}"></label>
+          <label>Scadenza manuale<input type="date" data-set="scadenzaManuale" value="${esc(x.v.scadenzaManuale||"")}" title="Usala solo se la scadenza non si calcola dall'ultima data (es. CPI con data di rinnovo diversa)"></label>
+          <label style="flex:1;min-width:220px">Nota sull'adempimento<input data-set="note" value="${esc(x.v.note||"")}" placeholder="es. scade ogni 2 anni perché cantiere"></label>
+        </div>
+        <div class="tablewrap" style="border:1px solid var(--line)"><table>
+          <thead><tr><th>Data</th><th>Rev.</th><th>Prot.</th><th>Stato</th><th>Note</th><th></th></tr></thead>
+          <tbody>${st.map(r=>`<tr><td class="nowrap">${fmtData(r.data)||'<span class="muted">senza data</span>'}</td><td>${esc(r.rev)}</td><td>${esc(r.prot)}</td>
+            <td>${r.stato?`<span title="${esc(STATI_RIGA[r.stato]||"")}">${esc(r.stato)}</span>`:""}</td><td>${esc(r.note)}</td>
+            <td class="nowrap"><button class="small" data-edit="${esc(rowKey(r))}">Modifica</button> <button class="small danger" data-del="${esc(rowKey(r))}">Elimina</button></td></tr>`).join("")
+            || `<tr><td colspan="6" class="muted">Nessuna revisione registrata.</td></tr>`}</tbody></table></div>
+        <div style="margin-top:8px"><button class="small primary" data-reg="${esc(id)}|${esc(x.cid)}">+ Registra aggiornamento</button></div>
+      </div></div>`;
+  };
+  return `<p><a href="#/aziende">← Aziende</a></p>
+  <div class="row" style="justify-content:space-between;align-items:baseline"><h1 style="margin-bottom:6px">${esc(a.nome)}${a.attiva===false?' <span class="badge b-np">archiviata</span>':""}</h1>
+  <span class="muted" style="font-size:12.5px">Ultima modifica: ${esc(a._meta?.modificatoDa||"—")} · ${fmtQuando(a._meta?.modificatoIl)}</span></div>
+  <div class="panel pad" id="anag">
+    <div class="form">
+      <label class="full">Ragione sociale<input data-f="nome" value="${esc(a.nome)}"></label>
+      <label>Codice ATECO<input data-f="ateco" value="${esc(a.ateco||"")}"></label>
+      <label>Attività soggetta a CPI?<select data-f="soggettaCPI">${opzioni({"":"—",SI:"Sì",NO:"No"},a.soggettaCPI||"")}</select></label>
+      <label>Livello rischio incendio<input data-f="rischioIncendio" value="${esc(a.rischioIncendio||"")}" placeholder="es. Liv. 2"></label>
+      <label>Classificazione Primo Soccorso<input data-f="classificazionePS" value="${esc(a.classificazionePS||"")}" placeholder="es. Gruppo B"></label>
+      <label>Referente interno<input data-f="referente" value="${esc(a.referente||"")}"></label>
+      <label class="check"><input type="checkbox" data-f="rsppStudio" ${a.rsppStudio?"checked":""}> RSPP dello studio</label>
+      <label class="full">Note generali<textarea data-f="note">${esc(a.note||"")}</textarea></label>
+    </div>
+    <div class="row" style="margin-top:10px"><button class="primary" id="btnAnag" disabled>Salva anagrafica</button>
+      <span class="spacer"></span><button id="btnArch">${a.attiva===false?"Riattiva azienda":"Archivia azienda"}</button></div>
+  </div>
+  <h2>Adempimenti attivi (${attivi.length})</h2>
+  <div class="legend">${["scaduto","urgente","attenzione","ok","dafare","senza","nel_dvr"].map(e=>`<span class="badge b-${ESITI[e].c}">${ESITI[e].l}</span>`).join("")}</div>
+  <div class="panel">${attivi.map(blocco).join("")||'<div class="empty">Nessun adempimento attivo.</div>'}</div>
+  <h2>Non pertinenti / non servono (${altri.length})</h2>
+  <div class="panel">${altri.map(blocco).join("")||'<div class="empty">—</div>'}</div>
+  <h2>Registro modifiche</h2>
+  <div class="panel pad log">${(a.registro||[]).slice(0,100).map(l=>`<div><span class="muted">${fmtQuando(l.quando)} · ${esc(l.chi)}</span> — ${esc(l.cosa)}</div>`).join("")||"—"}</div>`;
+}
+function bindAzienda(id){
+  const a=S.aziende.get(id); if(!a) return;
+  // anagrafica
+  const btn=$("#btnAnag");
+  $$("#anag [data-f]").forEach(el=>el.addEventListener("input",()=>{ S.dirty=true; btn.disabled=false; }));
+  btn.onclick=async()=>{
+    const val={}; $$("#anag [data-f]").forEach(el=>val[el.dataset.f]= el.type==="checkbox"?el.checked:el.value.trim());
+    if(!val.nome){ toast("La ragione sociale non può essere vuota","err"); return; }
+    const camb=Object.keys(val).filter(k=>(a[k]??(typeof val[k]==="boolean"?false:""))!==val[k]);
+    S.dirty=false;
+    if(!camb.length){ render(); return; }
+    await modifica(id, "Anagrafica modificata: "+camb.join(", "), az=>{ for(const k of camb) az[k]=val[k]; });
+  };
+  $("#btnArch").onclick=async()=>{
+    const arch=a.attiva!==false;
+    if(arch && !confirm(`Archiviare ${a.nome}? Non comparirà più nelle scadenze (i dati restano e puoi riattivarla).`)) return;
+    await modifica(id, arch?"Azienda archiviata":"Azienda riattivata", az=>{ az.attiva=!arch; });
+  };
+  // espandi / comprimi
+  $$("[data-toggle]").forEach(el=>el.onclick=e=>{ if(e.target.closest("button")) return; const k=id+"|"+el.dataset.toggle;
+    S.aperti.has(k)?S.aperti.delete(k):S.aperti.add(k); el.parentElement.classList.toggle("open"); });
+  // impostazioni della voce
+  $$(".adm [data-set]").forEach(el=>el.addEventListener("change",async()=>{
+    const cid=el.closest(".adm").dataset.cid, campo=el.dataset.set, nome=catById(cid)?.nome||cid; let val=el.value.trim();
+    if(campo==="periodicitaAnni" && val!=="") { val=Number(val.replace(",", ".")); if(isNaN(val)||val<0){ toast("Periodicità non valida","err"); return; } }
+    S.aperti.add(id+"|"+cid);
+    const descr = campo==="applicabilita" ? `${nome}: applicabilità → ${APPLICABILITA[val]}` : campo==="periodicitaAnni" ? `${nome}: periodicità → ${val===""?"standard":val+" anni"}` : campo==="scadenzaManuale" ? `${nome}: scadenza manuale → ${val?fmtData(val):"rimossa"}` : `${nome}: nota aggiornata`;
+    await modifica(id, descr, az=>{ const v=voce(az,cid); if(val===""&&campo!=="note"&&campo!=="applicabilita") delete v[campo]; else v[campo]=val; });
+  }));
+  // righe storico
+  $$(".adm [data-edit]").forEach(b=>b.onclick=async()=>{
+    const cid=b.closest(".adm").dataset.cid, k=b.dataset.edit, nome=catById(cid)?.nome||cid;
+    const r0=(a.adempimenti[cid].storico||[]).find(r=>rowKey(r)===k); if(!r0) return;
+    const r=await dialogo({titolo:`${nome}: modifica revisione`, corpo:formRiga(r0), ok:"Salva"}); if(!dialogoOk(r)) return;
+    await modifica(id, `${nome}: modificata revisione del ${fmtData(r0.data)}`, az=>{
+      const riga=(az.adempimenti?.[cid]?.storico||[]).find(x=>rowKey(x)===k);
+      if(!riga){ toast("Questa riga è stata modificata o eliminata da un collega: controlla e riprova.","err"); return false; }
+      Object.assign(riga,{id:riga.id||uid(), data:r.data, rev:r.rev.trim(), prot:r.prot.trim(), stato:r.stato, note:r.note.trim()});
+    });
+  });
+  $$(".adm [data-del]").forEach(b=>b.onclick=async()=>{
+    const cid=b.closest(".adm").dataset.cid, k=b.dataset.del, nome=catById(cid)?.nome||cid;
+    const r0=(a.adempimenti[cid].storico||[]).find(r=>rowKey(r)===k); if(!r0) return;
+    if(!confirm(`Eliminare la revisione del ${fmtData(r0.data)||"(senza data)"} di ${nome}?`)) return;
+    await modifica(id, `${nome}: eliminata revisione del ${fmtData(r0.data)} (rev. ${r0.rev||"-"}, note: ${r0.note||"-"})`, az=>{
+      const st=az.adempimenti?.[cid]?.storico||[]; const i=st.findIndex(x=>rowKey(x)===k);
+      if(i<0){ toast("Riga già eliminata da un collega.","err"); return false; } st.splice(i,1);
+    });
+  });
+}
+
+/* ------------------------------ matrice --------------------------------- */
+function vistaMatrice(){
+  const cat=catalogo(), f=S.filtri;
+  let az=[...S.aziende.values()].filter(a=>a.attiva!==false && (!f.rspp||a.rsppStudio)).sort((a,b)=>a.nome.localeCompare(b.nome));
+  const testo=x=> x.esito==="np"?"NP": x.esito==="non_serve"?"—": x.esito==="nel_dvr"?"DVR": x.esito==="dafare"?"da fare": x.esito==="senza"?fmtMeseAnno(x.ultima): fmtMeseAnno(x.scadenza);
+  return `<h1>Matrice aziende × adempimenti</h1>
+  <div class="filters"><label><input type="checkbox" id="mrspp" ${f.rspp?"checked":""}> solo aziende con RSPP dello studio</label>
+  <span class="muted" style="font-size:12.5px">Ogni cella mostra la scadenza (mese/anno). Clic sulla cella per aprire la scheda.</span></div>
+  <div class="legend">${["scaduto","urgente","attenzione","ok","dafare","senza","nel_dvr"].map(e=>`<span class="badge b-${ESITI[e].c}">${ESITI[e].l}</span>`).join("")}<span class="badge b-np">NP</span></div>
+  <div class="panel tablewrap" style="max-height:75vh"><table class="matrix"><thead><tr><th class="az">Azienda</th>${cat.map(c=>`<th title="${esc(c.nome)}">${esc(c.nome)}</th>`).join("")}</tr></thead>
+  <tbody>${az.map(a=>`<tr><td class="az" title="${esc(a.nome)}"><a href="#/azienda/${encodeURIComponent(a.id)}">${esc(a.nome)}</a></td>${cat.map(c=>{ const x=calcola(a,c.id);
+    return `<td class="c c-${ESITI[x.esito].c}" data-open="${esc(a.id)}|${esc(c.id)}" title="${esc(c.nome)}: ${esc(ESITI[x.esito].l)}${x.scadenza?" – "+fmtData(x.scadenza):""}">${esc(testo(x))}</td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+function bindMatrice(){
+  $("#mrspp").onchange=e=>{ S.filtri.rspp=e.target.checked; lsSet("ssl.filtri",JSON.stringify(S.filtri)); render(); };
+  $$("[data-open]").forEach(td=>td.onclick=()=>{ const [id,cid]=td.dataset.open.split("|"); S.aperti.add(id+"|"+cid); location.hash="#/azienda/"+encodeURIComponent(id); });
+}
+
+/* ---------------------------- impostazioni ------------------------------ */
+function vistaImpostazioni(){
+  const s=soglie();
+  return `<h1>Impostazioni</h1>
+  <div class="panel pad"><h2 style="margin-top:0">Tu</h2>
+    <div class="row"><span>Nome nel registro modifiche: <b>${esc(S.utente||"—")}</b></span><button id="btnUtente">Cambia</button></div></div>
+  <div class="panel pad" style="margin-top:12px"><h2 style="margin-top:0">Cartella dati</h2>
+    <p>Stai lavorando su: <b>${esc(S.store.label)}</b>${S.demo?" (dati di prova salvati solo in questo browser)":""}</p>
+    <div class="row"><button id="btnCambia">Cambia cartella</button><button id="btnBackup">Scarica backup completo (JSON)</button>${S.demo?'<button id="btnResetDemo" class="danger">Azzera demo</button>':""}</div></div>
+  <div class="panel pad" style="margin-top:12px"><h2 style="margin-top:0">Soglie di avviso</h2>
+    <div class="row"><label>Urgente entro <input type="number" id="sUrg" value="${s.urgente}" style="width:80px"> giorni</label>
+    <label>Attenzione entro <input type="number" id="sAtt" value="${s.attenzione}" style="width:80px"> giorni</label><button id="btnSoglie">Salva soglie</button></div></div>
+  <div class="panel" style="margin-top:12px"><div class="pad"><h2 style="margin:0">Catalogo adempimenti</h2>
+    <p class="muted" style="margin-bottom:0">La periodicità qui è quella standard: per una singola azienda puoi cambiarla dalla scheda. Le voci contrassegnate “prassi” hanno una periodicità decisa dallo studio, non imposta dalla norma.</p></div>
+    <div class="tablewrap"><table><thead><tr><th>Adempimento</th><th class="num">Periodicità std (anni)</th><th>Riferimento normativo</th><th>Prassi</th><th></th></tr></thead>
+    <tbody>${catalogo().map(c=>`<tr data-cat="${esc(c.id)}"><td><input data-c="nome" value="${esc(c.nome)}" style="width:100%;min-width:160px"></td>
+      <td class="num"><input data-c="periodicitaAnni" type="number" min="0" step="0.5" value="${esc(c.periodicitaAnni??"")}" placeholder="nessuna" style="width:90px"></td>
+      <td><input data-c="riferimento" value="${esc(c.riferimento||"")}" style="width:100%;min-width:260px"></td>
+      <td><input data-c="prassi" type="checkbox" ${c.prassi?"checked":""}></td><td><button class="small" data-savecat>Salva</button></td></tr>`).join("")}</tbody></table></div>
+    <div class="pad"><button id="btnAddCat">+ Aggiungi adempimento</button></div></div>`;
+}
+function bindImpostazioni(){
+  $("#btnUtente").onclick=async()=>{ const u=S.utente; S.utente=""; if(!await chiediUtente()) S.utente=u; aggiornaStato(); render(); };
+  $("#btnCambia").onclick=async()=>{ S.store=null; S.demo=false; S.aziende.clear(); await idb.del("cartella"); location.hash=""; render(); };
+  $("#btnBackup").onclick=()=>{ const b={esportatoIl:oraISO(), config:S.config, aziende:[...S.aziende.values()]};
+    const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(b,null,1)],{type:"application/json"})); a.download=`backup_scadenzario_${oggiISO()}.json`; a.click(); };
+  if($("#btnResetDemo")) $("#btnResetDemo").onclick=async()=>{ if(!confirm("Azzerare i dati demo?")) return; const root=await navigator.storage.getDirectory(); await root.removeEntry("demo-scadenzario",{recursive:true}); S.store=null; avviaDemo(); };
+  $("#btnSoglie").onclick=()=>{ const u=parseInt($("#sUrg").value,10), t=parseInt($("#sAtt").value,10); if(!(u>0&&t>=u)){ toast("Soglie non valide","err"); return; }
+    modificaConfig("soglie", c=>{ c.sogliaGiorni={urgente:u, attenzione:t}; }); };
+  $$("[data-savecat]").forEach(b=>b.onclick=()=>{ const tr=b.closest("tr"), id=tr.dataset.cat; const v={};
+    $$("[data-c]",tr).forEach(el=>v[el.dataset.c]= el.type==="checkbox"?el.checked : el.dataset.c==="periodicitaAnni" ? (el.value===""?null:Number(el.value)) : el.value.trim());
+    modificaConfig("catalogo "+id, c=>{ const x=c.catalogo.find(x=>x.id===id); if(x) Object.assign(x,v); }); });
+  $("#btnAddCat").onclick=async()=>{ const r=await dialogo({titolo:"Nuovo adempimento", corpo:`<div class="form"><label class="full">Nome<input name="nome" required autofocus></label>
+      <label>Periodicità (anni, vuoto = nessuna)<input name="per" type="number" min="0" step="0.5"></label><label class="full">Riferimento normativo<input name="rif"></label></div>`, ok:"Aggiungi"});
+    if(!dialogoOk(r)||!r.nome.trim()) return;
+    modificaConfig("nuovo adempimento", c=>{ let id=slug(r.nome),n=2; while(c.catalogo.some(x=>x.id===id)) id=slug(r.nome)+"-"+(n++);
+      c.catalogo.push({id, nome:r.nome.trim(), periodicitaAnni:r.per===""?null:Number(r.per), riferimento:r.rif.trim(), prassi:false}); }); };
+}
+
+function bind(r,arg){
+  $$("[data-reg]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const [id,cid]=b.dataset.reg.split("|"); registraAggiornamento(id,cid); });
+  if(r==="aziende") bindAziende(); else if(r==="azienda") bindAzienda(arg); else if(r==="matrice") bindMatrice(); else if(r==="impostazioni") bindImpostazioni(); else bindScadenze();
+}
+
+/* -------------------------- dati base / demo ---------------------------- */
+function configBase(){
+  const C=[["dvr","DVR",4,"D.Lgs. 81/08 artt. 17, 28, 29 – rielaborazione entro 30 gg da modifiche significative (art. 29 c.3)",true],
+  ["rumore","Rumore",4,"D.Lgs. 81/08 art. 181 c.2 e art. 190 – aggiornamento almeno quadriennale",false],
+  ["vibrazioni","Vibrazioni",4,"D.Lgs. 81/08 art. 181 c.2 e art. 202 – aggiornamento almeno quadriennale",false],
+  ["atex","Atmosfere esplosive (ATEX)",4,"D.Lgs. 81/08 Titolo XI, artt. 290 e 294 – revisione a modifiche (periodicità di prassi)",true],
+  ["roa","ROA",4,"D.Lgs. 81/08 art. 181 c.2 e art. 216 – aggiornamento almeno quadriennale",false],
+  ["cem","CEM",4,"D.Lgs. 81/08 art. 181 c.2 e art. 209 – aggiornamento almeno quadriennale",false],
+  ["amianto","Amianto (stato di conservazione)",1,"D.Lgs. 81/08 art. 248; DM 06/09/1994 – controllo periodico dei manufatti",false],
+  ["vdt","VDT",4,"D.Lgs. 81/08 Titolo VII, art. 174 (periodicità di prassi)",true],
+  ["chimico","Rischio chimico",3,"D.Lgs. 81/08 art. 223 c.7 – aggiornamento periodico (periodicità di prassi)",true],
+  ["mmc","MMC",4,"D.Lgs. 81/08 Titolo VI, art. 168; ISO 11228-1/2 (periodicità di prassi)",true],
+  ["ocra","OCRA / movimenti ripetitivi",4,"D.Lgs. 81/08 art. 28; ISO 11228-3 (periodicità di prassi)",true],
+  ["slc","Stress lavoro-correlato",2,"D.Lgs. 81/08 art. 28 c.1-bis; Indicazioni Commissione consultiva 18/11/2010 (periodicità di prassi)",true],
+  ["terra","Messa a terra (verifica)",5,"DPR 462/2001 art. 4 – 5 anni; 2 anni per cantieri, locali medici, ambienti a maggior rischio incendio",false],
+  ["pe","Piano di emergenza",null,"DM 02/09/2021 (GSA) – aggiornamento a modifiche, nessuna scadenza fissa",false],
+  ["evacuazione","Prova di evacuazione",1,"DM 02/09/2021 (GSA), All. II – esercitazione almeno annuale",false],
+  ["riunione","Riunione periodica",1,"D.Lgs. 81/08 art. 35 – almeno annuale (aziende > 15 lavoratori)",false],
+  ["scariche","Scariche atmosferiche (verifica)",5,"DPR 462/2001 art. 4 – 5 anni; 2 anni nei casi a maggior rischio",false],
+  ["scia","SCIA VVF",5,"DPR 151/2011 art. 5 – attestazione di rinnovo periodico ogni 5 anni (10 per alcune attività)",false],
+  ["cpi","CPI",5,"DPR 151/2011 art. 5 – attestazione di rinnovo periodico ogni 5 anni (10 per alcune attività)",false],
+  ["sollevamento","Apparecchi di sollevamento",2,"D.Lgs. 81/08 art. 71 c.11 e All. VII – verifiche periodiche annuali o biennali secondo il tipo",false],
+  ["haccp","Manuale HACCP",3,"Reg. (CE) 852/2004 art. 5 – revisione a modifiche (periodicità di prassi)",true],
+  ["aua","AUA / AIA",15,"DPR 59/2013 art. 3 c.6 – durata AUA 15 anni; AIA: D.Lgs. 152/06 art. 29-octies",false]];
+  return {versioneFormato:1, catalogo:C.map(([id,nome,p,rif,pr])=>({id,nome,periodicitaAnni:p,riferimento:rif,prassi:pr})), sogliaGiorni:{urgente:30,attenzione:180}, _meta:{versione:1,modificatoIl:oraISO(),modificatoDa:"setup"}};
+}
+function datiDemo(){
+  const oggi=oggiISO(), fa=(anni,giorni=0)=>{ const d=parseISO(oggi); d.setFullYear(d.getFullYear()-anni); d.setDate(d.getDate()-giorni); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; };
+  const R=(data,rev,note="",stato="C")=>({id:uid(),data,rev:String(rev),prot:"",stato,note});
+  const base=(id,nome,rspp,ad,extra={})=>Object.assign({id,nome,attiva:true,rsppStudio:rspp,referente:"",ateco:"",soggettaCPI:"",rischioIncendio:"",classificazionePS:"",note:"",
+    adempimenti:Object.fromEntries(configBase().catalogo.map(c=>[c.id,ad[c.id]||{applicabilita:"np",storico:[],note:""}])),
+    _meta:{versione:1,modificatoIl:oraISO(),modificatoDa:"demo"}, registro:[{quando:oraISO(),chi:"demo",cosa:"Dati di esempio"}]},extra);
+  const A=(...st)=>({applicabilita:"attivo",storico:st,note:""}), D={applicabilita:"nel_dvr",storico:[],note:""};
+  return [
+    base("officine-alfa","OFFICINE ALFA SRL",true,{dvr:A(R(fa(5),2),R(fa(3,350),3,"Nuovo RSPP")),rumore:A(R(fa(4,-20),1)),vibrazioni:A(R(fa(4,10),1)),chimico:A(R(fa(2,200),2)),slc:A(R(fa(1,300),1)),terra:A(R(fa(4,330),"","Verbale ente notificato")),riunione:A(R(fa(1,5),"")),evacuazione:A(R(fa(0,200),"")),vdt:D,mmc:D},{ateco:"25.62",soggettaCPI:"SI",rischioIncendio:"Liv. 2",classificazionePS:"Gruppo B"}),
+    base("carpenteria-beta","CARPENTERIA BETA SNC",true,{dvr:A(R(fa(1),5)),rumore:A(R(fa(1),2)),vibrazioni:A(R(fa(1),2)),roa:A(R(fa(3,340),0,"Saldatura")),cem:A(R(fa(3,340),0)),sollevamento:{applicabilita:"attivo",storico:[R(fa(1,355),"","Carroponte 5 t")],note:"",periodicitaAnni:1},cpi:A(R(fa(4,300),"","Attestazione rinnovo"))},{ateco:"25.11",soggettaCPI:"SI"}),
+    base("panificio-gamma","PANIFICIO GAMMA",false,{dvr:A(R(fa(2),1)),haccp:A(R(fa(3,20),2)),evacuazione:{applicabilita:"attivo",storico:[],note:""},slc:A(R(fa(2,40),1)),mmc:A(R(fa(2),1))},{ateco:"10.71"}),
+    base("studio-delta","STUDIO DELTA ASSOCIATI",true,{dvr:A(R(fa(0,100),3)),vdt:A(R(fa(0,100),1)),slc:A(R(fa(1,100),1)),pe:A(R(fa(2),1))},{ateco:"69.20"}),
+    base("edilizia-epsilon","EDILIZIA EPSILON SPA",true,{dvr:A(R(fa(3,360),4)),rumore:A(R(fa(3,355),2)),vibrazioni:A(R(fa(3,355),2)),chimico:A(R(fa(2,350),1)),terra:{applicabilita:"attivo",storico:[R(fa(1,340),"","Cantiere")],note:"Cantiere: biennale",periodicitaAnni:2},amianto:A(R(fa(0,350),"","Copertura capannone")),riunione:A(R(fa(0,300),""))},{ateco:"41.20",soggettaCPI:"NO"}),
+    base("logistica-zeta","LOGISTICA ZETA SRL",false,{dvr:A(R(fa(4,60),1)),mmc:A(R(fa(4,60),1)),sollevamento:{applicabilita:"da_gestire",storico:[],note:"Muletti: verificare"},atex:{applicabilita:"attivo",storico:[],note:"Locale ricarica batterie"}},{ateco:"52.10"}),
+  ];
+}
+
+/* ------------------------------ avvio ----------------------------------- */
+$("#btnRefresh").onclick=async()=>{ if(!S.store) return; await caricaTutto(true); if(!S.dirty) render(); toast("Dati riletti dalla cartella"); };
+$("#userChip").onclick=async()=>{ const u=S.utente; S.utente=""; if(!await chiediUtente()) S.utente=u; aggiornaStato(); };
+setInterval(poll, POLL_MS);
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) poll(); });
+window.addEventListener("beforeunload", e=>{ if(S.dirty){ e.preventDefault(); e.returnValue=""; } });
+(async()=>{
+  const h=await idb.get("cartella");
+  if(h && h.kind==="directory" && h.queryPermission){
+    try{ if(await h.queryPermission({mode:"readwrite"})==="granted"){ await apri(h,h.name); return; } }catch(e){}
+  }
+  render();
+})();
+</script>
+</body>
+</html>
