@@ -17,6 +17,23 @@ Repository GitHub (solo il programma)     Cartella condivisa Dropbox (solo i dat
 
 ---
 
+## Novità della versione 0.3
+- **Banner di intestazione** con nome dello studio (Progetto Impresa), logo e ricerca rapida "Vai all'azienda…". Il logo si carica da *Impostazioni → Studio* e lo vedono tutti i colleghi.
+- **Catalogo adempimenti gestibile** da *Impostazioni → Catalogo adempimenti*:
+  - aggiungere, rinominare e spostare un adempimento in un'altra sezione;
+  - **ordinare** con le frecce ↑ ↓: lo stesso ordine vale per tendine, schede, matrice ed esportazione CSV;
+  - **nascondere** gli adempimenti che hanno date registrate: i dati restano e si possono ripristinare. Si possono **eliminare** solo quelli mai usati;
+  - spunta **"Non in carico"**: di norma la scadenza non è dello studio (già attiva sugli *apparecchi di sollevamento*). Vale per tutte le aziende, salvo eccezioni impostate nella singola scheda.
+- **Modifica in blocco**: stessa impostazione su un adempimento in molte aziende insieme, con filtri per aziende (tutte / con RSPP / senza RSPP) e per stato delle voci. Esempio: "HACCP → NP dove non c'è nessuna data".
+- **Stesso adempimento più volte** nella stessa azienda (più SCIA, più apparecchi di sollevamento…). Ogni voce ha **etichetta**, periodicità, gestione, note e storico propri. Si aggiunge con "Aggiungi voce" o "Aggiungi un'altra voce …" dentro la voce. Nella matrice la cella mostra la voce più critica e il numero (×2).
+- **"Configura adempimenti"** nella scheda azienda: in un'unica finestra spunti cosa è pertinente e cosa è in carico allo studio. Si apre da sola quando crei un'azienda nuova.
+- **Note in vista** sulla riga dell'adempimento (scheda) e sotto il nome (Scadenze). Se l'adempimento non ha una nota propria, compare la nota dell'ultima revisione.
+- **Pagina Scadenze**:
+  - casella **"In carico"** su ogni riga: si toglie con un clic, senza aprire la scheda;
+  - filtro **In carico / Non in carico / Tutte**;
+  - filtri per sezione e adempimento nell'ordine del catalogo.
+- I dati in formato 0.1 e 0.2 vengono **convertiti in automatico** alla prima apertura, senza perdere nulla.
+
 ## Novità della versione 0.2
 - **Nuova grafica**: tema verde, menu a sinistra (diventa un menu a scomparsa su schermi piccoli), aziende mostrate come card.
 - **Aziende con RSPP dello studio** ben riconoscibili: etichetta con scudo **RSPP**, bordo dorato sulle card, barra dorata a sinistra negli elenchi e 🛡 nel calendario. Ovunque si possono filtrare con "solo RSPP".

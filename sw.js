@@ -1,7 +1,7 @@
 // Service worker: rende l'app installabile e utilizzabile anche offline.
 // Strategia: prima la rete (così gli aggiornamenti arrivano subito), cache come riserva.
 // I dati NON passano da qui: stanno nella cartella Dropbox.
-const CACHE = "scadenzario-ssl-v2";
+const CACHE = "scadenzario-ssl-v3";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon.svg", "./icons/icon-192.png", "./icons/icon-512.png"];
 
 self.addEventListener("install", e => {

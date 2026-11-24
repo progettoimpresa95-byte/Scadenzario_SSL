@@ -33,6 +33,7 @@
   }
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0}
 body{background:var(--bg);color:var(--text);font:14px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
 a{color:var(--accent2)}
@@ -48,11 +49,11 @@ button.primary{background:var(--accent);border-color:var(--accent);color:var(--a
 button.primary:hover{background:var(--accent2)}
 button.danger{color:var(--red)}
 button.small{padding:4px 9px;font-size:12.5px}
-button.ghost{border-color:transparent;background:transparent}
-button:disabled{opacity:.5;cursor:default}
+button.icon{padding:4px 7px}
+button:disabled{opacity:.45;cursor:default}
 svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* ---------- layout con menu laterale ---------- */
+/* ---------- layout ---------- */
 .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
 aside{background:linear-gradient(180deg,var(--side),var(--side2));color:var(--side-text);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 14px;gap:6px;z-index:30}
 .logo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;color:#fff;text-decoration:none}
@@ -73,9 +74,24 @@ aside{background:linear-gradient(180deg,var(--side),var(--side2));color:var(--si
 .user{display:flex;align-items:center;gap:8px;cursor:pointer}
 .avatar{width:28px;height:28px;border-radius:50%;background:var(--side-hl);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
 .topbar{display:none}
-main{padding:24px 28px 40px;min-width:0}
+.col{min-width:0;display:flex;flex-direction:column}
+main{padding:22px 28px 40px;min-width:0}
 .wrap{max-width:1400px;margin:0 auto}
 .demo-flag{display:inline-block;background:#f0b54a;color:#2b1d02;font-weight:700;font-size:11px;border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+
+/* ---------- banner di intestazione ---------- */
+.masthead{background:linear-gradient(110deg,#156b45 0%,#1f8a5b 45%,#2fae73 100%);color:#fff;position:relative;overflow:hidden}
+.masthead::after{content:"";position:absolute;right:-60px;top:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);pointer-events:none}
+.masthead .in{max-width:1456px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:relative;z-index:1}
+.masthead .brandbox{display:flex;align-items:center;gap:14px;min-width:0}
+.masthead .logobox{background:#fff;border-radius:12px;padding:6px 10px;height:56px;display:flex;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.masthead .logobox img{max-height:44px;max-width:180px;display:block}
+.masthead .studio{font-size:12.5px;letter-spacing:1.6px;text-transform:uppercase;opacity:.9;font-weight:600}
+.masthead .prog{font-size:22px;font-weight:800;letter-spacing:-.2px;line-height:1.15}
+.masthead .search{margin-left:auto;position:relative}
+.masthead .search input{width:280px;max-width:100%;border:none;border-radius:10px;padding:9px 12px 9px 34px;background:rgba(255,255,255,.95);color:#16241d}
+.masthead .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#5f7368;width:16px;height:16px}
+@media (max-width:900px){ .masthead .in{padding:12px 16px} .masthead .prog{font-size:18px} .masthead .search{margin-left:0;width:100%} .masthead .search input{width:100%} .masthead .logobox{height:46px} .masthead .logobox img{max-height:34px} }
 
 @media (max-width:900px){
   .app{grid-template-columns:1fr}
@@ -94,6 +110,7 @@ main{padding:24px 28px 40px;min-width:0}
 h1{font-size:24px;margin:0;letter-spacing:-.2px}
 .sub{color:var(--muted);margin-top:2px}
 h2{font-size:16px;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
+h3.sez{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent2);margin:18px 0 6px}
 .muted{color:var(--muted)}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
 .pad{padding:16px 18px}
@@ -114,9 +131,6 @@ h2{font-size:16px;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
 .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .filters input[type=search]{width:260px;max-width:100%}
 .filters label{display:flex;gap:6px;align-items:center;color:var(--muted)}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel)}
-.seg button{border:none;border-radius:0;padding:6px 12px}
-.seg button.on{background:var(--accent);color:var(--accent-ink)}
 
 .tablewrap{overflow-x:auto;border-radius:var(--r)}
 table{border-collapse:collapse;width:100%}
@@ -126,7 +140,10 @@ tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
 td.num,th.num{text-align:right;white-space:nowrap}
 td.nowrap{white-space:nowrap}
+td.ctr,th.ctr{text-align:center}
 tr.is-rspp td:first-child{box-shadow:inset 4px 0 0 var(--rspp)}
+tr.non-carico td{color:var(--muted)}
+.nota{display:block;font-size:12px;color:var(--muted);max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
 .b-scaduto{background:var(--red-bg);color:var(--red)}
@@ -140,6 +157,7 @@ tr.is-rspp td:first-child{box-shadow:inset 4px 0 0 var(--rspp)}
 .b-esterno{background:var(--ext-bg);color:var(--ext);border:1px dashed color-mix(in srgb,var(--ext) 55%,transparent)}
 .rspp-tag{display:inline-flex;align-items:center;gap:3px;background:var(--rspp-bg);color:var(--rspp);border:1px solid var(--rspp-line);border-radius:999px;font-size:11px;font-weight:800;padding:1px 7px 1px 5px;letter-spacing:.3px;vertical-align:middle;white-space:nowrap}
 .rspp-tag svg{width:13px;height:13px;stroke-width:2.4}
+.tag{display:inline-block;font-size:11px;border-radius:6px;padding:1px 6px;background:var(--panel2);color:var(--muted);border:1px solid var(--line);vertical-align:middle}
 .legend{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px;font-size:12px}
 
 /* ---------- card aziende ---------- */
@@ -150,10 +168,10 @@ tr.is-rspp td:first-child{box-shadow:inset 4px 0 0 var(--rspp)}
 .card .stripe.s-scaduto{background:var(--red)} .card .stripe.s-urgente{background:var(--orange)} .card .stripe.s-attenzione{background:#d4b106} .card .stripe.s-dafare{background:var(--violet)} .card .stripe.s-none{background:var(--line)}
 .card.rspp{border-color:var(--rspp-line);box-shadow:0 0 0 1px var(--rspp-line),var(--shadow)}
 .card .body{padding:14px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
-.card .name{font-weight:700;font-size:15.5px;line-height:1.25;display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.card .name{font-weight:700;font-size:15.5px;line-height:1.25;padding-right:56px}
 .card .meta{color:var(--muted);font-size:12.5px}
 .card .counts{display:flex;gap:6px;flex-wrap:wrap}
-.card .foot{border-top:1px solid var(--line);padding:9px 16px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;background:var(--panel2)}
+.card .foot{border-top:1px solid var(--line);padding:9px 16px;font-size:12.5px;color:var(--muted);background:var(--panel2)}
 .card .ok-all{color:var(--green);font-weight:600;font-size:13px;display:flex;align-items:center;gap:5px}
 .card .corner{position:absolute;top:6px;right:0;background:var(--rspp);color:#fff;font-size:10.5px;font-weight:800;padding:3px 10px 3px 8px;border-radius:0 0 0 10px;display:flex;align-items:center;gap:3px;letter-spacing:.4px}
 .card .corner svg{width:12px;height:12px;stroke-width:2.6}
@@ -226,45 +244,57 @@ tr.is-rspp td:first-child{box-shadow:inset 4px 0 0 var(--rspp)}
 @media (prefers-color-scheme: dark){ .tab.on{color:var(--accent)} }
 .tab .n{background:var(--panel2);color:var(--muted);border-radius:999px;padding:0 7px;font-size:12px;font-weight:600}
 .tab .crit{background:var(--red);color:#fff;border-radius:999px;padding:0 7px;font-size:11.5px;font-weight:700}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
 .chipf{border-radius:999px;padding:5px 12px;font-size:13px}
 .chipf b{opacity:.75;margin-left:2px}
 .chipf.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .chipf.cf-scaduto:not(.on){color:var(--red)} .chipf.cf-urgente:not(.on){color:var(--orange)} .chipf.cf-attenzione:not(.on){color:var(--yellow)}
 .chipf.cf-ok:not(.on){color:var(--green)} .chipf.cf-dafare:not(.on){color:var(--violet)} .chipf.cf-neldvr:not(.on),.chipf.cf-senza:not(.on){color:var(--blue)} .chipf.cf-esterno:not(.on){color:var(--ext)}
-details.anag>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;font-weight:600}
-details.anag>summary::-webkit-details-marker{display:none}
-details.anag[open]>summary{margin-bottom:12px}
 .adm{border-top:1px solid var(--line)}
 .adm:first-child{border-top:none}
-.adm-head{display:grid;grid-template-columns:minmax(180px,1.6fr) 140px 105px 105px 150px auto;gap:10px;align-items:center;padding:10px 16px;cursor:pointer}
+.adm-head{display:grid;grid-template-columns:minmax(170px,1.3fr) 125px 95px 95px minmax(120px,1.3fr) 150px auto;gap:10px;align-items:center;padding:10px 16px;cursor:pointer}
 .adm-head:hover{background:var(--panel2)}
 .adm-head .t{font-weight:600}
+.adm-head .t .et{font-weight:500;color:var(--accent2)}
+@media (prefers-color-scheme: dark){ .adm-head .t .et{color:var(--accent)} }
 .adm-head .t .caret{display:inline-block;width:14px;color:var(--muted);transition:transform .15s}
 .adm.open .adm-head .t .caret{transform:rotate(90deg)}
+.adm-head .nt{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic}
 .adm-body{display:none;padding:4px 16px 16px 40px;background:color-mix(in srgb,var(--panel2) 40%,transparent)}
 .adm.open .adm-body{display:block}
 .adm-body .settings{display:flex;flex-wrap:wrap;gap:10px 16px;margin:8px 0 12px;align-items:flex-end}
 .adm-body .settings label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
-.adm-body .settings label.sw{flex-direction:row;align-items:center;gap:8px;color:var(--text);font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
 .ref{font-size:12px;color:var(--muted);margin:6px 0 4px}
 .adm.dim .adm-head .t{color:var(--muted);font-weight:500}
 .adm.ext .adm-head .date{color:var(--muted);font-style:italic}
+@media (max-width:1150px){ .adm-head{grid-template-columns:minmax(170px,1.3fr) 120px 95px 95px 150px auto} .adm-head .nt{display:none} }
 @media (max-width:760px){
   .adm-head{grid-template-columns:1fr auto;}
   .adm-head .hide-sm{display:none}
   .adm-body{padding-left:16px}
 }
 
+/* ---------- impostazioni / catalogo ---------- */
+.cat td{padding:6px 6px}
+.cat select{max-width:170px}
+.cat tr.nascosto td{opacity:.55}
+.cat .sezrow td{background:var(--accent-soft);color:var(--accent2);font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.5px}
+@media (prefers-color-scheme: dark){ .cat .sezrow td{color:var(--accent)} }
+.logo-prev{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;height:64px;display:flex;align-items:center}
+.logo-prev img{max-height:48px;max-width:220px}
+.cfg-table td,.cfg-table th{padding:6px 10px}
+
 .banner{padding:10px 14px;border-radius:10px;margin-bottom:14px;border:1px solid}
 .banner.warn{background:var(--orange-bg);color:var(--orange);border-color:color-mix(in srgb,var(--orange) 40%,transparent)}
 .banner.info{background:var(--accent-soft);color:var(--accent2);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
 
-dialog{border:1px solid var(--line);border-radius:16px;padding:0;background:var(--panel);color:var(--text);width:min(580px,calc(100vw - 32px));box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog{border:1px solid var(--line);border-radius:16px;padding:0;background:var(--panel);color:var(--text);width:min(600px,calc(100vw - 32px));max-height:90vh;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog.wide{width:min(860px,calc(100vw - 32px))}
 dialog::backdrop{background:rgba(6,24,15,.5)}
-dialog form{padding:20px}
+dialog form{padding:20px;max-height:calc(90vh - 2px);overflow:auto}
 dialog h3{margin:0 0 12px;font-size:17px}
-dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;position:sticky;bottom:-20px;background:var(--panel);padding:10px 0 2px}
 
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:560px}
 .toast{background:var(--side);color:#fff;padding:10px 16px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25);font-size:13.5px}
@@ -280,7 +310,7 @@ dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
 .log div{padding:5px 0;border-bottom:1px dashed var(--line)}
 
 @media print{
-  aside,.topbar,.no-print,#toast,.filters{display:none!important}
+  aside,.topbar,.no-print,#toast,.filters,.masthead .search{display:none!important}
   .app{display:block} main{padding:0}
   .panel{box-shadow:none}
   .adm-body{display:block!important;background:none}
@@ -305,7 +335,21 @@ dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
       <div class="box user" id="userChip" title="Cambia nome utente"><span class="avatar" id="avatar">?</span><span id="userName">—</span></div>
     </div>
   </aside>
-  <main><div class="wrap" id="view"></div></main>
+  <div class="col">
+    <header class="masthead">
+      <div class="in">
+        <div class="brandbox">
+          <div class="logobox" id="logoBox" hidden><img id="studioLogo" alt="Logo studio"></div>
+          <div><div class="studio" id="studioNome">Progetto Impresa</div><div class="prog">Scadenzario SSL e Ambiente</div></div>
+        </div>
+        <div class="search no-print" id="searchBox" hidden>
+          <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="cercaAz" list="listaAz" placeholder="Vai all'azienda…" autocomplete="off"><datalist id="listaAz"></datalist>
+        </div>
+      </div>
+    </header>
+    <main><div class="wrap" id="view"></div></main>
+  </div>
 </div>
 <div id="toast"></div>
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
@@ -313,15 +357,18 @@ dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
 <script>
 "use strict";
 /* =========================================================================
-   Scadenzario SSL e Ambiente – app a file singolo (installabile come app desktop/PWA).
+   Scadenzario SSL e Ambiente – app a file singolo (installabile come PWA).
    Dati: una cartella (es. condivisa su Dropbox) con
-     config.json            catalogo adempimenti + soglie
-     aziende/<id>.json      un file per azienda
+     config.json            studio, sezioni, catalogo adempimenti (ordinato), soglie
+     aziende/<id>.json      un file per azienda, con l'elenco delle sue "voci"
+   Una voce = un adempimento del catalogo per quell'azienda (anche ripetuto,
+   es. più SCIA o più apparecchi di sollevamento), con etichetta, periodicità,
+   gestione e storico propri.
    Ogni modifica rilegge il file aggiornato, applica la modifica e lo riscrive:
    così le modifiche dei colleghi su altre parti dell'azienda non vanno perse.
    ========================================================================= */
 
-const APP_VERSION = "0.2";
+const APP_VERSION = "0.3";
 const POLL_MS = 30000;
 const STATI_RIGA = {C:"Concluso e consegnato", DC:"Da controllare e consegnare", I:"Incompleto / da concludere", S:"Superato / da aggiornare", A:"Assente / da fare"};
 const APPLICABILITA = {attivo:"Applicabile", np:"Non pertinente (NP)", nel_dvr:"Valutato nel DVR", non_serve:"Non serve", da_gestire:"Da valutare"};
@@ -332,17 +379,17 @@ const ESITI = {
   np:{l:"NP",c:"np"}, nel_dvr:{l:"Nel DVR",c:"neldvr"}, non_serve:{l:"Non serve",c:"nonserve"}
 };
 const PESO = {scaduto:5, urgente:4, dafare:3, attenzione:2, ok:1};
+const PRIORITA = ["scaduto","urgente","dafare","attenzione","ok","senza","esterno","nel_dvr","non_serve","np"];
+const MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
 const SEZIONI_BASE = [
-  {id:"vr", nome:"Valutazioni dei rischi", breve:"Valutazioni rischi"},
-  {id:"ssl", nome:"Adempimenti SSL", breve:"Adempimenti SSL"},
-  {id:"amb", nome:"Adempimenti ambientali", breve:"Ambiente"},
-  {id:"altro", nome:"Altri adempimenti", breve:"Altri"}
+  {id:"vr", nome:"Valutazioni dei rischi"}, {id:"ssl", nome:"Adempimenti SSL"},
+  {id:"amb", nome:"Adempimenti ambientali"}, {id:"altro", nome:"Altri adempimenti"}
 ];
 const SEZ_DEFAULT = {dvr:"vr",rumore:"vr",vibrazioni:"vr",atex:"vr",roa:"vr",cem:"vr",amianto:"vr",vdt:"vr",chimico:"vr",mmc:"vr",ocra:"vr",slc:"vr",
   terra:"ssl",pe:"ssl",evacuazione:"ssl",riunione:"ssl",scariche:"ssl",scia:"ssl",cpi:"ssl",sollevamento:"ssl",
   aua:"amb",mud:"amb",fgas:"amb",emissioni:"amb",scarichi:"amb",acustica:"amb", haccp:"altro"};
 const FILTRI_STATO = [["pertinenti","Tutti i pertinenti"],["scaduto","Scaduti"],["urgente","Entro 30 gg"],["attenzione","Entro 180 gg"],["ok","In regola"],["dafare","Da fare"],["senza","Senza scadenza"],["nel_dvr","Valutati nel DVR"],["esterno","Non in gestione"],["np","NP / non serve"]];
-const MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+const GESTIONE_OPZ = {"":"Come da catalogo", "si":"In gestione allo studio", "no":"Non in gestione (solo informativa)"};
 
 const ICO = {
   scadenze:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/>',
@@ -354,7 +401,13 @@ const ICO = {
   check:'<path d="M5 12l5 5 9-10"/>',
   print:'<path d="M6 9V3h12v6M6 18H4v-7h16v7h-2"/><rect x="6" y="14" width="12" height="7"/>',
   download:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
-  plus:'<path d="M12 5v14M5 12h14"/>'
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  up:'<path d="M12 19V5M6 11l6-6 6 6"/>', down:'<path d="M12 5v14M6 13l6 6 6-6"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  sliders:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff:'<path d="M3 3l18 18M10.6 6.1A10 10 0 0 1 12 6c6 0 10 6 10 6a17 17 0 0 1-3 3.6M6.6 6.6C3.7 8.4 2 12 2 12s4 7 10 7c1.6 0 3-.4 4.3-1"/>'
 };
 const ico = (n,cls="i") => `<svg class="${cls}" viewBox="0 0 24 24">${ICO[n]}</svg>`;
 const RSPP_TAG = `<span class="rspp-tag" title="Lo studio svolge il ruolo di RSPP">${ico("shield")}RSPP</span>`;
@@ -362,12 +415,13 @@ const RSPP_TAG = `<span class="rspp-tag" title="Lo studio svolge il ruolo di RSP
 const S = {
   store:null, config:null, aziende:new Map(), mtimes:new Map(), conflitti:[], errori:[],
   utente: lsGet("ssl.utente") || "", demo:false, busy:0, ultimoSync:null,
-  filtri: Object.assign({q:"", adm:"", sez:"", esito:"critici", rspp:false, ordina:"scadenza", esterni:false, referente:""},JSON.parse(lsGet("ssl.filtri")||"{}")),
+  filtri: Object.assign({q:"", adm:"", sez:"", esito:"critici", rspp:false, ordina:"scadenza", carico:"si", referente:""}, JSON.parse(lsGet("ssl.filtri")||"{}")),
   filtriAz: Object.assign({q:"", archiviate:false, rspp:false, critiche:false, ordina:"nome"}, JSON.parse(lsGet("ssl.filtriAz")||"{}")),
   cal:{anno:new Date().getFullYear(), mese:new Date().getMonth(), sel:null, esterni:false, rspp:false, sez:""},
   scheda:{tab:"vr", stato:"pertinenti"}, matSez:"vr",
   aperti:new Set(), dirty:false, route:"", installPrompt:null
 };
+delete S.filtri.esterni;
 
 /* ---------------------------- utilità ---------------------------------- */
 function lsGet(k){ try{return localStorage.getItem(k)}catch(e){return null} }
@@ -383,11 +437,11 @@ function parseISO(s){ if(!s||!/^\d{4}-\d{2}-\d{2}$/.test(s)) return null; const 
 function fmtData(s){ const d=parseISO(s); return d?`${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`:""; }
 function fmtMeseAnno(s){ const d=parseISO(s); return d?`${pad2(d.getMonth()+1)}/${String(d.getFullYear()).slice(2)}`:""; }
 function fmtQuando(iso){ if(!iso) return ""; const d=new Date(iso); if(isNaN(d)) return iso; return d.toLocaleString("it-IT",{dateStyle:"short",timeStyle:"short"}); }
-function addAnni(iso,anni){ const d=parseISO(iso); if(!d) return null; const t=new Date(d.getFullYear()+Math.floor(anni), d.getMonth()+Math.round((anni%1)*12), d.getDate());
+function addAnni(iso,anni){ const d=parseISO(iso); if(!d) return null; const mesi=Math.round(anni*12); const t=new Date(d.getFullYear(), d.getMonth()+mesi, d.getDate());
   if(t.getDate()!==d.getDate()) t.setDate(0); return isoDi(t); }
 function giorniTra(isoA,isoB){ return Math.round((parseISO(isoB)-parseISO(isoA))/86400000); }
 function slug(s){ return String(s).normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"azienda"; }
-function uid(){ return "r"+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function hash(str){ let h=5381; for(let i=0;i<str.length;i++) h=((h<<5)+h+str.charCodeAt(i))|0; return (h>>>0).toString(36); }
 function rowKey(r){ return r.id || ("h"+hash([r.data,r.prot,r.rev,r.stato,r.note].join("|"))); }
 function iniziali(n){ return (n||"?").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("")||"?"; }
@@ -412,7 +466,7 @@ class FolderStore{
     }
     return {files,conflitti};
   }
-  async read(id){ return this._read(await this.az.getFileHandle(id+".json")); }
+  async read(id){ const r=await this._read(await this.az.getFileHandle(id+".json")); normalizzaAzienda(r.data); return r; }
   async write(id,data){ return this._write(await this.az.getFileHandle(id+".json",{create:true}), data); }
   async exists(id){ try{ await this.az.getFileHandle(id+".json"); return true; }catch(e){ return false; } }
 }
@@ -423,60 +477,109 @@ const idb = {
   async del(k){ try{ const db=await this.open(); await new Promise(res=>{ const t=db.transaction("kv","readwrite"); t.objectStore("kv").delete(k); t.oncomplete=res; t.onerror=res; }); }catch(e){} }
 };
 
-/* ----------------------------- logica ---------------------------------- */
+/* --------------------------- modello dati ------------------------------- */
+// Converte il vecchio formato {adempimenti:{cid:{...}}} nell'elenco "voci".
+// L'id della voce convertita è uguale al codice adempimento: così due PC che
+// convertono lo stesso file ottengono gli stessi id.
+function normalizzaAzienda(az){
+  if(!Array.isArray(az.voci)){
+    az.voci=[];
+    for(const [cid,v] of Object.entries(az.adempimenti||{})){
+      az.voci.push(Object.assign({id:cid, cid, applicabilita:"np", storico:[], note:""}, v, {id:cid, cid}));
+    }
+    delete az.adempimenti;
+  }
+  az.formato=2;
+  return az;
+}
 function catalogo(){ return (S.config?.catalogo)||[]; }
 function catById(id){ return catalogo().find(c=>c.id===id); }
 function sezioni(){ return (S.config?.sezioni)||SEZIONI_BASE; }
-function sezDi(cid){ const c=catById(cid); return c?.sezione || SEZ_DEFAULT[cid] || (String(cid).startsWith("x-")?"vr":"altro"); }
+function sezDiItem(c){ return c?.sezione || SEZ_DEFAULT[c?.id] || (String(c?.id).startsWith("x-")?"vr":"altro"); }
+function sezDi(cid){ return sezDiItem(catById(cid)||{id:cid}); }
 function nomeSez(id){ return sezioni().find(s=>s.id===id)?.nome || id; }
-function opzioniSez(sel,tutte="Tutte le sezioni"){ return `<option value="">${tutte}</option>`+sezioni().map(s=>`<option value="${s.id}"${s.id===sel?" selected":""}>${esc(s.nome)}</option>`).join(""); }
-// Aggiorna config.json creati con versioni precedenti (sezioni + nuovi adempimenti ambientali)
-function migraConfig(c){
-  if((c.versioneFormato||1)>=2) return false;
-  c.sezioni=c.sezioni||SEZIONI_BASE.map(s=>({...s}));
-  for(const x of c.catalogo) if(!x.sezione) x.sezione=SEZ_DEFAULT[x.id] || (x.id.startsWith("x-")?"vr":"altro");
-  for(const n of configBase().catalogo) if(!c.catalogo.some(x=>x.id===n.id)) c.catalogo.push(n);
-  c.versioneFormato=2; return true;
+// Catalogo nell'ordine di visualizzazione: per sezione, poi nell'ordine scelto in Impostazioni
+function catOrdinato(inclNascosti=false){
+  const secs=sezioni().map(s=>s.id), arr=catalogo().filter(c=>inclNascosti||!c.nascosto);
+  return secs.flatMap(s=>arr.filter(c=>sezDiItem(c)===s)).concat(arr.filter(c=>!secs.includes(sezDiItem(c))));
 }
-function soglie(){ return Object.assign({urgente:30, attenzione:180}, S.config?.sogliaGiorni||{}); }
-function inGestione(v){ return v.gestione!==false; }
+function opzioniSez(sel,tutte="Tutte le sezioni"){ return `<option value="">${tutte}</option>`+sezioni().map(s=>`<option value="${s.id}"${s.id===sel?" selected":""}>${esc(s.nome)}</option>`).join(""); }
+function opzioniCat(sel,{sez="",vuota="Tutti gli adempimenti",nascosti=false}={}){
+  return (vuota?`<option value="">${vuota}</option>`:"")+sezioni().filter(s=>!sez||s.id===sez).map(s=>{
+    const items=catOrdinato(nascosti).filter(c=>sezDiItem(c)===s.id); if(!items.length) return "";
+    return `<optgroup label="${esc(s.nome)}">${items.map(c=>`<option value="${esc(c.id)}"${c.id===sel?" selected":""}>${esc(c.nome)}</option>`).join("")}</optgroup>`; }).join("");
+}
+// Voci di un'azienda nell'ordine del catalogo. Per gli adempimenti mai usati
+// crea una voce "virtuale" NP (id = codice adempimento), salvata solo se modificata.
+function vociAzienda(az){
+  const cat=catOrdinato(false), idx=new Map(cat.map((c,i)=>[c.id,i]));
+  const out=(az.voci||[]).filter(v=>idx.has(v.cid)).map((v,i)=>({v,i}));
+  for(const c of cat) if(!out.some(o=>o.v.cid===c.id)) out.push({v:{id:c.id,cid:c.id,applicabilita:"np",storico:[],note:"",_virtuale:true},i:-1});
+  out.sort((a,b)=>idx.get(a.v.cid)-idx.get(b.v.cid) || (a.v.id===a.v.cid?-1:b.v.id===b.v.cid?1:a.i-b.i));
+  return out.map(o=>o.v);
+}
+function gestitoDefault(cid){ return !catById(cid)?.nonGestito; }
+function gestito(v){ return v.gestione===true ? true : v.gestione===false ? false : gestitoDefault(v.cid); }
+function setGestione(v, val){ if(val===gestitoDefault(v.cid)) delete v.gestione; else v.gestione=val; }
+function catalogoDefault(){ return configBase().catalogo; }
 
-function calcola(az, cid){
-  const v = az.adempimenti?.[cid] || {applicabilita:"np", storico:[]};
-  const cat = catById(cid) || {};
+function calcolaVoce(az, v){
+  const cat = catById(v.cid) || {};
   const appl = v.applicabilita || "np";
   const date = (v.storico||[]).map(r=>r.data).filter(Boolean).sort();
   const ultima = date[date.length-1] || null;
   const per = (v.periodicitaAnni!==undefined && v.periodicitaAnni!==null && v.periodicitaAnni!=="") ? Number(v.periodicitaAnni) : cat.periodicitaAnni;
+  const gest = gestito(v);
   let scadenza = null, giorni = null, esito;
   if(appl==="np") esito="np"; else if(appl==="nel_dvr") esito="nel_dvr"; else if(appl==="non_serve") esito="non_serve";
   else {
     if(v.scadenzaManuale) scadenza=v.scadenzaManuale;
     else if(ultima && per) scadenza=addAnni(ultima, per);
     if(scadenza) giorni=giorniTra(oggiISO(), scadenza);
-    if(!inGestione(v)) esito="esterno";               // informativo: mai critico
+    if(!gest) esito="esterno";                         // informativo: mai critico
     else if(appl==="da_gestire") esito="dafare";
     else if(!ultima && !scadenza) esito="dafare";
     else if(!scadenza) esito="senza";
     else { const s=soglie(); esito = giorni<0?"scaduto": giorni<=s.urgente?"urgente": giorni<=s.attenzione?"attenzione":"ok"; }
   }
-  return {cid, nome:cat.nome||cid, v, appl, ultima, per, scadenza, giorni, esito, gestito:inGestione(v)};
+  const ultimaRiga=(v.storico||[]).filter(r=>r.data).sort((a,b)=>a.data<b.data?-1:1).pop();
+  const nota = v.note || ultimaRiga?.note || "";
+  return {vid:v.id, cid:v.cid, nomeBase:cat.nome||v.cid, etichetta:v.etichetta||"", nome:(cat.nome||v.cid)+(v.etichetta?" – "+v.etichetta:""),
+    v, appl, ultima, per, scadenza, giorni, esito, gestito:gest, eccezione:v.gestione!==undefined, nota};
 }
+function soglie(){ return Object.assign({urgente:30, attenzione:180}, S.config?.sogliaGiorni||{}); }
 function tutteLeVoci(){
   const out=[];
   for(const az of S.aziende.values()){
     if(az.attiva===false) continue;
-    for(const c of catalogo()) out.push(Object.assign(calcola(az,c.id),{az}));
+    for(const v of vociAzienda(az)) out.push(Object.assign(calcolaVoce(az,v),{az}));
   }
   return out;
 }
 function riepilogoAzienda(az){
   const r={scaduto:0,urgente:0,attenzione:0,dafare:0,ok:0,esterno:0,prossima:null,peggiore:"none"};
-  for(const c of catalogo()){ const x=calcola(az,c.id); if(r[x.esito]!==undefined) r[x.esito]++;
+  for(const v of vociAzienda(az)){ const x=calcolaVoce(az,v); if(r[x.esito]!==undefined) r[x.esito]++;
     if(x.esito!=="esterno" && x.scadenza && (x.giorni??0)>=0 && (!r.prossima || x.scadenza<r.prossima.scadenza)) r.prossima=x;
     if(PESO[x.esito] && (r.peggiore==="none" || PESO[x.esito]>PESO[r.peggiore])) r.peggiore=x.esito; }
   r.punteggio=r.scaduto*1000+r.urgente*100+r.dafare*10+r.attenzione;
   return r;
+}
+
+/* ---------------------- migrazione config.json ------------------------- */
+function migraConfig(c){
+  let cambiato=false;
+  if((c.versioneFormato||1)<2){
+    c.sezioni=c.sezioni||SEZIONI_BASE.map(s=>({...s}));
+    for(const x of c.catalogo) if(!x.sezione) x.sezione=SEZ_DEFAULT[x.id] || (x.id.startsWith("x-")?"vr":"altro");
+    for(const n of catalogoDefault()) if(!c.catalogo.some(x=>x.id===n.id)) c.catalogo.push(n);
+    c.versioneFormato=2; cambiato=true;
+  }
+  if(c.versioneFormato<3){
+    c.studio=c.studio||{nome:"Progetto Impresa", logo:""};
+    const s=c.catalogo.find(x=>x.id==="sollevamento"); if(s && s.nonGestito===undefined) s.nonGestito=true;
+    c.versioneFormato=3; cambiato=true;
+  }
+  return cambiato;
 }
 
 /* -------------------------- caricamento -------------------------------- */
@@ -486,6 +589,12 @@ function aggiornaStato(){
   $("#syncTime").textContent = S.ultimoSync ? "Aggiornato alle "+S.ultimoSync.toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}) : "";
   $("#userName").textContent = S.utente || "Imposta il tuo nome";
   $("#avatar").textContent = iniziali(S.utente);
+  const st=S.config?.studio||{nome:"Progetto Impresa"};
+  $("#studioNome").textContent = st.nome||"";
+  $("#logoBox").hidden = !st.logo; if(st.logo) $("#studioLogo").src=st.logo;
+  $("#searchBox").hidden = !S.store;
+  const nomi=[...S.aziende.values()].filter(a=>a.attiva!==false).map(a=>a.nome).sort();
+  const dl=$("#listaAz"); const key=nomi.join("|"); if(dl.dataset.k!==key){ dl.dataset.k=key; dl.innerHTML=nomi.map(n=>`<option value="${esc(n)}">`).join(""); }
   disegnaMenu();
 }
 function disegnaMenu(){
@@ -502,7 +611,7 @@ async function caricaTutto(forza){
     const cfg = await S.store.getConfig();
     if(cfg && JSON.stringify(cfg)!==JSON.stringify(S.config)){ S.config=cfg; cambiato=true; }
     if(!S.config){ S.config = configBase(); await S.store.saveConfig(S.config); cambiato=true; }
-    if(migraConfig(S.config)){ S.config._meta=Object.assign({},S.config._meta,{modificatoIl:oraISO(),modificatoDa:S.utente||"aggiornamento automatico",ultimaModifica:"migrazione a sezioni"}); await S.store.saveConfig(S.config); cambiato=true; }
+    if(migraConfig(S.config)){ S.config._meta=Object.assign({},S.config._meta,{modificatoIl:oraISO(),modificatoDa:S.utente||"aggiornamento automatico",ultimaModifica:"aggiornamento formato"}); await S.store.saveConfig(S.config); cambiato=true; }
     const {files,conflitti} = await S.store.list();
     S.conflitti=conflitti; S.errori=[];
     const presenti=new Set(files.map(f=>f.id));
@@ -542,7 +651,8 @@ async function chiediUtente(){
   if(!dialogoOk(nome) || !nome.nome.trim()) return false;
   S.utente=nome.nome.trim(); lsSet("ssl.utente",S.utente); aggiornaStato(); return true;
 }
-async function modifica(id, cosa, fn){
+// Rilegge il file, applica fn() sulla versione più recente, salva.
+async function modifica(id, cosa, fn, {silenzioso=false}={}){
   if(!await chiediUtente()) return false;
   setBusy(1);
   try{
@@ -556,31 +666,40 @@ async function modifica(id, cosa, fn){
     fresco.registro=[{quando:oraISO(), chi:S.utente, cosa}, ...(fresco.registro||[])].slice(0,300);
     delete fresco.id; const mtime=await S.store.write(id,fresco); fresco.id=id;
     S.aziende.set(id,fresco); S.mtimes.set(id,mtime);
-    toast(altri ? `Salvato. Nel frattempo ${altri} aveva modificato questa azienda: anche le sue modifiche sono state mantenute.` : "Salvato");
+    if(!silenzioso) toast(altri ? `Salvato. Nel frattempo ${altri} aveva modificato questa azienda: anche le sue modifiche sono state mantenute.` : "Salvato");
     return true;
-  }catch(e){ toast("Non salvato: "+e.message,"err"); return false; }
-  finally{ setBusy(-1); render(); }
+  }catch(e){ toast("Non salvato ("+(S.aziende.get(id)?.nome||id)+"): "+e.message,"err"); return false; }
+  finally{ setBusy(-1); if(!silenzioso) render(); }
 }
 async function modificaConfig(cosa, fn){
   if(!await chiediUtente()) return false;
   setBusy(1);
   try{
     const fresco = (await S.store.getConfig()) || configBase();
-    fn(fresco);
+    migraConfig(fresco);
+    if(fn(fresco)===false) return false;
     fresco._meta={versione:(fresco._meta?.versione||0)+1, modificatoIl:oraISO(), modificatoDa:S.utente, ultimaModifica:cosa};
     await S.store.saveConfig(fresco); S.config=fresco; toast("Impostazioni salvate"); return true;
   }catch(e){ toast("Non salvato: "+e.message,"err"); return false; }
   finally{ setBusy(-1); render(); }
 }
-function voce(az,cid){ az.adempimenti=az.adempimenti||{}; return az.adempimenti[cid]=az.adempimenti[cid]||{applicabilita:"attivo",storico:[],note:""}; }
+// Trova la voce nel file fresco; se è "virtuale" (mai salvata) la crea.
+function voceMut(az, vid){
+  normalizzaAzienda(az);
+  let v=az.voci.find(x=>x.id===vid);
+  if(!v && catById(vid)){ v={id:vid, cid:vid, applicabilita:"np", storico:[], note:""}; az.voci.push(v); }
+  if(!v) toast("Questa voce è stata eliminata da un collega: ricarica e riprova.","err");
+  return v||null;
+}
 
 /* ----------------------------- dialoghi -------------------------------- */
-function dialogo({titolo,corpo,ok="OK",annulla="Annulla",pericolo=false}){
+function dialogo({titolo,corpo,ok="OK",annulla="Annulla",pericolo=false,largo=false,dopo=null}){
   return new Promise(res=>{
     const d=$("#dlg"), f=$("#dlgForm");
+    d.classList.toggle("wide",!!largo);
     f.innerHTML=`<h3>${esc(titolo)}</h3>${corpo}<div class="actions"><button value="cancel" formnovalidate>${esc(annulla)}</button><button value="ok" class="${pericolo?"danger":"primary"}">${esc(ok)}</button></div>`;
     d.onclose=()=>{ if(d.returnValue==="ok"){ const o={__ok:true}; new FormData(f).forEach((v,k)=>o[k]=v); $$("input[type=checkbox]",f).forEach(c=>o[c.name]=c.checked); res(o);} else res(null); };
-    d.returnValue=""; d.showModal(); const a=$("[autofocus]",f); if(a) a.focus();
+    d.returnValue=""; d.showModal(); if(dopo) dopo(f); const a=$("[autofocus]",f); if(a) a.focus();
   });
 }
 const dialogoOk = r => r && r.__ok;
@@ -593,17 +712,20 @@ function formRiga(r={}){
     <label>Stato<select name="stato"><option value="">—</option>${opzioni(STATI_RIGA, r.stato??"C")}</select></label>
     <label class="full">Note<textarea name="note">${esc(r.note||"")}</textarea></label></div>`;
 }
-async function registraAggiornamento(id,cid){
-  const az=S.aziende.get(id), x=calcola(az,cid);
-  const revSucc = (()=>{ const r=(x.v.storico||[]).filter(r=>r.data).sort((a,b)=>a.data<b.data?-1:1).pop(); const n=parseInt(r?.rev,10); return isNaN(n)?"":String(n+1); })();
+function trovaVoce(az, vid){ return vociAzienda(az).find(v=>v.id===vid); }
+async function registraAggiornamento(id,vid){
+  const az=S.aziende.get(id), v=trovaVoce(az,vid); if(!v) return;
+  const x=calcolaVoce(az,v);
+  const revSucc = (()=>{ const r=(v.storico||[]).filter(r=>r.data).sort((a,b)=>a.data<b.data?-1:1).pop(); const n=parseInt(r?.rev,10); return isNaN(n)?"":String(n+1); })();
   const r=await dialogo({titolo:`${az.nome} · ${x.nome}`, corpo:
     `<p class="muted" style="margin-top:0">Registra una nuova revisione o esecuzione. Ultima data: <b>${fmtData(x.ultima)||"nessuna"}</b>${x.per?` · periodicità ${x.per} anni`:""}</p>`+formRiga({rev:revSucc})+
-    `<label class="row" style="margin-top:12px;gap:8px"><input type="checkbox" name="gestione" ${x.gestito?"checked":""}> <span><b>Scadenza in gestione allo studio</b><br><span class="muted" style="font-size:12.5px">Togli la spunta se il dato è solo informativo (es. verifica fatta da altri): la data resta visibile ma non genera allarmi.</span></span></label>`, ok:"Registra"});
+    `<label class="row" style="margin-top:12px;gap:8px;align-items:flex-start"><input type="checkbox" name="gestione" ${x.gestito?"checked":""}> <span><b>Scadenza in gestione allo studio</b><br><span class="muted" style="font-size:12.5px">Togli la spunta se il dato è solo informativo (es. verifica fatta da altri): la data resta visibile ma non genera allarmi.</span></span></label>`, ok:"Registra"});
   if(!dialogoOk(r)) return;
   await modifica(id, `${x.nome}: registrato aggiornamento del ${fmtData(r.data)}${r.rev?" (rev. "+r.rev+")":""}${r.gestione?"":" – non in gestione"}`, az=>{
-    const v=voce(az,cid); if(["np","da_gestire","non_serve"].includes(v.applicabilita)) v.applicabilita="attivo";
-    v.storico=v.storico||[]; v.storico.push({id:uid(), data:r.data, rev:r.rev.trim(), prot:r.prot.trim(), stato:r.stato, note:r.note.trim()});
-    if(r.gestione) delete v.gestione; else v.gestione=false;
+    const v=voceMut(az,vid); if(!v) return false;
+    if(["np","da_gestire","non_serve"].includes(v.applicabilita)) v.applicabilita="attivo";
+    v.storico=v.storico||[]; v.storico.push({id:"r"+uid(), data:r.data, rev:r.rev.trim(), prot:r.prot.trim(), stato:r.stato, note:r.note.trim()});
+    setGestione(v, !!r.gestione);
     delete v.scadenzaManuale;
   });
 }
@@ -632,7 +754,6 @@ function bannerGenerali(){
   if(S.errori.length) h+=`<div class="banner warn"><b>Alcuni file non sono leggibili</b> (forse sincronizzazione in corso, riprova tra poco):<br>${S.errori.map(esc).join("<br>")}</div>`;
   return h;
 }
-const nomeAz = a => `${esc(a.nome)}${a.rsppStudio?" "+RSPP_TAG:""}`;
 
 /* ------------------------------ setup ---------------------------------- */
 function vistaSetup(){
@@ -694,15 +815,16 @@ async function avviaDemo(){
 
 /* ---------------------------- vista scadenze ---------------------------- */
 function referenti(){ return [...new Set([...S.aziende.values()].map(a=>(a.referente||"").trim()).filter(Boolean))].sort(); }
+function ordineCatMap(){ return new Map(catOrdinato(true).map((c,i)=>[c.id,i])); }
 function filtraVoci(){
   const f=S.filtri, q=f.q.trim().toLowerCase();
   let voci=tutteLeVoci().filter(x=>!["np","non_serve"].includes(x.esito));
-  if(!f.esterni) voci=voci.filter(x=>x.esito!=="esterno");
+  if(f.carico==="si") voci=voci.filter(x=>x.gestito); else if(f.carico==="no") voci=voci.filter(x=>!x.gestito);
   if(f.rspp) voci=voci.filter(x=>x.az.rsppStudio);
   if(f.sez) voci=voci.filter(x=>sezDi(x.cid)===f.sez);
   if(f.adm) voci=voci.filter(x=>x.cid===f.adm);
   if(f.referente) voci=voci.filter(x=>(x.az.referente||"").trim()===f.referente);
-  if(q) voci=voci.filter(x=>(x.az.nome+" "+x.nome+" "+(x.az.referente||"")).toLowerCase().includes(q));
+  if(q) voci=voci.filter(x=>(x.az.nome+" "+x.nome+" "+(x.az.referente||"")+" "+x.nota).toLowerCase().includes(q));
   return voci;
 }
 function vistaScadenze(){
@@ -710,38 +832,43 @@ function vistaScadenze(){
   const conta=e=>tutte.filter(x=>x.esito===e).length;
   const k=[["critici","Critici",conta("scaduto")+conta("urgente"),"k-scaduto","scaduti + entro 30 gg"],["scaduto","Scaduti",conta("scaduto"),"k-scaduto"],["urgente","Entro 30 giorni",conta("urgente"),"k-urgente"],["attenzione","Entro 180 giorni",conta("attenzione"),"k-attenzione"],["dafare","Da fare / da valutare",conta("dafare"),"k-dafare"],["ok","In regola",conta("ok"),"k-ok"],["tutti","Tutte le voci",tutte.length,"k-tutti"]];
   let voci=tutte;
-  if(f.esito==="critici") voci=voci.filter(x=>x.esito==="scaduto"||x.esito==="urgente");
-  else if(f.esito!=="tutti") voci=voci.filter(x=>x.esito===f.esito);
-  const ord={azienda:(a,b)=>a.az.nome.localeCompare(b.az.nome)||a.nome.localeCompare(b.nome),
-             adempimento:(a,b)=>a.nome.localeCompare(b.nome)||a.az.nome.localeCompare(b.az.nome),
+  if(f.carico!=="no"){
+    if(f.esito==="critici") voci=voci.filter(x=>x.esito==="scaduto"||x.esito==="urgente");
+    else if(f.esito!=="tutti") voci=voci.filter(x=>x.esito===f.esito);
+  }
+  const oc=ordineCatMap();
+  const ord={azienda:(a,b)=>a.az.nome.localeCompare(b.az.nome)||oc.get(a.cid)-oc.get(b.cid),
+             adempimento:(a,b)=>oc.get(a.cid)-oc.get(b.cid)||a.az.nome.localeCompare(b.az.nome),
              scadenza:(a,b)=>(a.scadenza||"9999").localeCompare(b.scadenza||"9999")||a.az.nome.localeCompare(b.az.nome)};
   voci.sort(ord[f.ordina]||ord.scadenza);
   const refs=referenti();
-  const righe=voci.slice(0,1500).map(x=>`<tr class="${x.az.rsppStudio?"is-rspp":""}">
-    <td><a href="#/azienda/${encodeURIComponent(x.az.id)}"><b>${esc(x.az.nome)}</b></a>${x.az.rsppStudio?" "+RSPP_TAG:""}</td>
-    <td>${esc(x.nome)}</td>
+  const righe=voci.slice(0,1500).map(x=>`<tr class="${x.az.rsppStudio?"is-rspp":""} ${x.gestito?"":"non-carico"}">
+    <td><a href="#/azienda/${encodeURIComponent(x.az.id)}" data-goto="${esc(x.az.id)}|${esc(x.vid)}"><b>${esc(x.az.nome)}</b></a>${x.az.rsppStudio?" "+RSPP_TAG:""}</td>
+    <td>${esc(x.nomeBase)}${x.etichetta?` <span class="tag">${esc(x.etichetta)}</span>`:""}${x.nota?`<span class="nota" title="${esc(x.nota)}">${esc(x.nota)}</span>`:""}</td>
     <td class="nowrap">${fmtData(x.ultima)}</td>
     <td class="num">${x.per?x.per+" a":"—"}</td>
     <td class="nowrap">${fmtData(x.scadenza)}${x.v.scadenzaManuale?' <span class="muted" title="Scadenza inserita a mano">✎</span>':""}</td>
     <td class="num">${giorniTxt(x.giorni)}</td>
     <td><span class="badge b-${ESITI[x.esito].c}">${ESITI[x.esito].l}</span></td>
-    <td class="nowrap" style="text-align:right"><button class="small" data-reg="${esc(x.az.id)}|${esc(x.cid)}" title="Registra una nuova revisione / esecuzione">${ico("plus")}Registra</button></td></tr>`).join("");
+    <td class="ctr"><input type="checkbox" data-carico="${esc(x.az.id)}|${esc(x.vid)}" ${x.gestito?"checked":""} title="Scadenza in carico allo studio"></td>
+    <td class="nowrap" style="text-align:right"><button class="small" data-reg="${esc(x.az.id)}|${esc(x.vid)}" title="Registra una nuova revisione / esecuzione">${ico("plus")}Registra</button></td></tr>`).join("");
   return `<div class="page-head"><div><h1>Scadenze${S.demo?'<span class="demo-flag">DEMO</span>':""}</h1><div class="sub">${new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div></div>
     <button id="btnCsv" class="no-print">${ico("download")}Esporta CSV (Excel)</button></div>
-  <div class="kpis">${k.map(([id,l,n,c,t])=>`<div class="panel kpi ${c} ${f.esito===id?"sel":""}" data-esito="${id}" title="${esc(t||"")}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("")}</div>
+  ${f.carico==="no"?`<div class="banner info">Stai vedendo le voci <b>non in carico allo studio</b>: sono solo informative e non contano mai come critiche. Rimetti la spunta “In carico” per riportarle in gestione.</div>`:
+  `<div class="kpis">${k.map(([id,l,n,c,t])=>`<div class="panel kpi ${c} ${f.esito===id?"sel":""}" data-esito="${id}" title="${esc(t||"")}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("")}</div>`}
   <div class="filters">
-    <input type="search" id="fq" placeholder="Cerca azienda o adempimento…" value="${esc(f.q)}">
+    <input type="search" id="fq" placeholder="Cerca azienda, adempimento, nota…" value="${esc(f.q)}">
+    <select id="fcar" title="In carico allo studio">${opzioni({si:"In carico allo studio",no:"Non in carico",tutte:"In carico e non in carico"},f.carico)}</select>
     <select id="fsez">${opzioniSez(f.sez)}</select>
-    <select id="fadm"><option value="">Tutti gli adempimenti</option>${catalogo().filter(c=>!f.sez||sezDi(c.id)===f.sez).map(c=>`<option value="${esc(c.id)}"${c.id===f.adm?" selected":""}>${esc(c.nome)}</option>`).join("")}</select>
+    <select id="fadm">${opzioniCat(f.adm,{sez:f.sez})}</select>
     ${refs.length?`<select id="fref"><option value="">Tutti i referenti</option>${refs.map(r=>`<option${r===f.referente?" selected":""}>${esc(r)}</option>`).join("")}</select>`:""}
     <select id="ford">${opzioni({scadenza:"Ordina per scadenza",azienda:"Ordina per azienda",adempimento:"Ordina per adempimento"},f.ordina)}</select>
     <label><input type="checkbox" id="frspp" ${f.rspp?"checked":""}> solo ${RSPP_TAG}</label>
-    <label title="Mostra anche le voci registrate solo a titolo informativo"><input type="checkbox" id="fest" ${f.esterni?"checked":""}> mostra “non in gestione”</label>
   </div>
   <div class="panel tablewrap"><table>
-    <thead><tr><th>Azienda</th><th>Adempimento</th><th>Ultima data</th><th class="num">Period.</th><th>Scadenza</th><th class="num">Giorni</th><th>Stato</th><th></th></tr></thead>
-    <tbody>${righe||`<tr><td colspan="8" class="empty">Nessuna voce con questi filtri. ${f.esito==="critici"?"Ottimo! 🎉":""}</td></tr>`}</tbody></table></div>
-  <p class="muted" style="font-size:12.5px">“Da fare” = adempimento applicabile senza nessuna data registrata, oppure “da valutare”. Le voci <b>non in gestione</b> (dati registrati solo per conoscenza) non contano mai come critiche.</p>`;
+    <thead><tr><th>Azienda</th><th>Adempimento / note</th><th>Ultima data</th><th class="num">Period.</th><th>Scadenza</th><th class="num">Giorni</th><th>Stato</th><th class="ctr" title="Scadenza in carico allo studio">In carico</th><th></th></tr></thead>
+    <tbody>${righe||`<tr><td colspan="9" class="empty">Nessuna voce con questi filtri. ${f.esito==="critici"&&f.carico==="si"?"Ottimo! 🎉":""}</td></tr>`}</tbody></table></div>
+  <p class="muted" style="font-size:12.5px">Togli la spunta <b>In carico</b> per le scadenze seguite da altri (manutentore, professionista antincendio…): restano registrate ma non generano allarmi. “Da fare” = applicabile senza date registrate, oppure “da valutare”.</p>`;
 }
 function salvaFiltri(){ lsSet("ssl.filtri",JSON.stringify(S.filtri)); lsSet("ssl.filtriAz",JSON.stringify(S.filtriAz)); }
 function cercaLive(sel, set){ let t; $(sel).oninput=e=>{ clearTimeout(t); t=setTimeout(()=>{ set(e.target.value); salvaFiltri(); render(); const i=$(sel); i.focus(); i.setSelectionRange(i.value.length,i.value.length); },250); }; }
@@ -749,18 +876,23 @@ function bindScadenze(){
   const salva=()=>{ salvaFiltri(); render(); };
   $$(".kpi").forEach(el=>el.onclick=()=>{ S.filtri.esito=el.dataset.esito; salva(); });
   cercaLive("#fq", v=>S.filtri.q=v);
-  $("#fsez").onchange=e=>{ S.filtri.sez=e.target.value; if(S.filtri.adm && sezDi(S.filtri.adm)!==S.filtri.sez && S.filtri.sez) S.filtri.adm=""; salva(); };
+  $("#fcar").onchange=e=>{ S.filtri.carico=e.target.value; salva(); };
+  $("#fsez").onchange=e=>{ S.filtri.sez=e.target.value; if(S.filtri.adm && S.filtri.sez && sezDi(S.filtri.adm)!==S.filtri.sez) S.filtri.adm=""; salva(); };
   $("#fadm").onchange=e=>{ S.filtri.adm=e.target.value; salva(); };
   if($("#fref")) $("#fref").onchange=e=>{ S.filtri.referente=e.target.value; salva(); };
   $("#ford").onchange=e=>{ S.filtri.ordina=e.target.value; salva(); };
   $("#frspp").onchange=e=>{ S.filtri.rspp=e.target.checked; salva(); };
-  $("#fest").onchange=e=>{ S.filtri.esterni=e.target.checked; salva(); };
   $("#btnCsv").onclick=esportaCsv;
+  $$("[data-carico]").forEach(c=>c.onchange=async()=>{
+    const [id,vid]=c.dataset.carico.split("|"), az=S.aziende.get(id), v=trovaVoce(az,vid), x=calcolaVoce(az,v), val=c.checked;
+    await modifica(id, `${x.nome}: ${val?"scadenza in carico allo studio":"scadenza non in carico (solo informativa)"}`, az=>{ const v=voceMut(az,vid); if(!v) return false; setGestione(v,val); });
+  });
 }
 function esportaCsv(){
-  const righe=[["Azienda","RSPP studio","Referente","Adempimento","Applicabilità","In gestione","Ultima data","Periodicità (anni)","Scadenza","Giorni","Stato"]];
-  for(const x of tutteLeVoci().sort((a,b)=>a.az.nome.localeCompare(b.az.nome)))
-    righe.push([x.az.nome, x.az.rsppStudio?"SI":"", x.az.referente||"", x.nome, APPLICABILITA[x.appl]||x.appl, x.gestito?"SI":"NO", fmtData(x.ultima), x.per??"", fmtData(x.scadenza), x.giorni??"", ESITI[x.esito].l]);
+  const oc=ordineCatMap();
+  const righe=[["Azienda","RSPP studio","Referente","Sezione","Adempimento","Etichetta","Applicabilità","In carico","Ultima data","Periodicità (anni)","Scadenza","Giorni","Stato","Note"]];
+  for(const x of tutteLeVoci().sort((a,b)=>a.az.nome.localeCompare(b.az.nome)||oc.get(a.cid)-oc.get(b.cid)))
+    righe.push([x.az.nome, x.az.rsppStudio?"SI":"", x.az.referente||"", nomeSez(sezDi(x.cid)), x.nomeBase, x.etichetta, APPLICABILITA[x.appl]||x.appl, x.gestito?"SI":"NO", fmtData(x.ultima), x.per??"", fmtData(x.scadenza), x.giorni??"", ESITI[x.esito].l, x.nota]);
   scarica(`scadenzario_${oggiISO()}.csv`, "\ufeff"+righe.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";")).join("\r\n"), "text/csv");
 }
 
@@ -798,7 +930,7 @@ function vistaCalendario(){
     <span class="spacer"></span>
     <select id="calSez">${opzioniSez(c.sez)}</select>
     <label class="row" style="gap:6px;color:var(--muted)"><input type="checkbox" id="calRspp" ${c.rspp?"checked":""}> solo ${RSPP_TAG}</label>
-    <label class="row" style="gap:6px;color:var(--muted)"><input type="checkbox" id="calEst" ${c.esterni?"checked":""}> mostra “non in gestione”</label>
+    <label class="row" style="gap:6px;color:var(--muted)"><input type="checkbox" id="calEst" ${c.esterni?"checked":""}> mostra “non in carico”</label>
   </div>
   ${scadutiPrima?`<div class="banner warn">Ci sono <b>${scadutiPrima}</b> scadenze già superate prima di questo mese. <a href="#/scadenze" data-go-scaduti>Vedile nell'elenco scadenze</a></div>`:""}
   <div class="cal-layout">
@@ -806,9 +938,10 @@ function vistaCalendario(){
     <div class="panel daylist">
       <div class="pad" style="border-bottom:1px solid var(--line)"><b style="text-transform:capitalize">${parseISO(c.sel).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</b>
         <div class="muted" style="font-size:12.5px">${sel.length} scadenze · nel mese: ${nelMese.length}</div></div>
-      ${sel.map(x=>`<div class="it"><div><a href="#/azienda/${encodeURIComponent(x.az.id)}"><b>${esc(x.az.nome)}</b></a> ${x.az.rsppStudio?RSPP_TAG:""}</div>
+      ${sel.map(x=>`<div class="it"><div><a href="#/azienda/${encodeURIComponent(x.az.id)}" data-goto="${esc(x.az.id)}|${esc(x.vid)}"><b>${esc(x.az.nome)}</b></a> ${x.az.rsppStudio?RSPP_TAG:""}</div>
         <div class="row" style="justify-content:space-between"><span>${esc(x.nome)}</span><span class="badge b-${ESITI[x.esito].c}">${ESITI[x.esito].l}</span></div>
-        <div class="row" style="justify-content:space-between"><span class="muted" style="font-size:12.5px">Ultima: ${fmtData(x.ultima)||"—"}</span><button class="small" data-reg="${esc(x.az.id)}|${esc(x.cid)}">${ico("plus")}Registra</button></div></div>`).join("")
+        ${x.nota?`<div class="muted" style="font-size:12px;font-style:italic">${esc(x.nota)}</div>`:""}
+        <div class="row" style="justify-content:space-between"><span class="muted" style="font-size:12.5px">Ultima: ${fmtData(x.ultima)||"—"}</span><button class="small" data-reg="${esc(x.az.id)}|${esc(x.vid)}">${ico("plus")}Registra</button></div></div>`).join("")
         || `<div class="empty">Nessuna scadenza in questo giorno.</div>`}
     </div>
   </div>`;
@@ -821,7 +954,7 @@ function bindCalendario(){
   $("#calSez").onchange=e=>{ c.sez=e.target.value; render(); };
   $("#calEst").onchange=e=>{ c.esterni=e.target.checked; render(); };
   $$("[data-day]").forEach(el=>el.onclick=()=>{ c.sel=el.dataset.day; const d=parseISO(c.sel); if(d.getMonth()!==c.mese){ c.anno=d.getFullYear(); c.mese=d.getMonth(); } render(); });
-  const g=$("[data-go-scaduti]"); if(g) g.onclick=()=>{ S.filtri.esito="scaduto"; salvaFiltri(); };
+  const g=$("[data-go-scaduti]"); if(g) g.onclick=()=>{ S.filtri.esito="scaduto"; S.filtri.carico="si"; salvaFiltri(); };
   $("#btnIcs").onclick=esportaIcs;
 }
 function esportaIcs(){
@@ -829,8 +962,8 @@ function esportaIcs(){
   const t=s=>String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
   const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Scadenzario SSL e Ambiente//IT","CALSCALE:GREGORIAN","X-WR-CALNAME:Scadenzario SSL e Ambiente"];
   for(const x of voci){ const d=x.scadenza.replace(/-/g,""), e=isoDi(new Date(parseISO(x.scadenza).getTime()+86400000)).replace(/-/g,"");
-    lines.push("BEGIN:VEVENT",`UID:${x.az.id}-${x.cid}-${d}@scadenzario-ssl`,`DTSTAMP:${stamp}`,`DTSTART;VALUE=DATE:${d}`,`DTEND;VALUE=DATE:${e}`,
-      `SUMMARY:${t((x.az.rsppStudio?"[RSPP] ":"")+x.az.nome+" – "+x.nome)}`,`DESCRIPTION:${t("Ultima data: "+(fmtData(x.ultima)||"—")+(x.gestito?"":"\nNon in gestione allo studio"))}`,
+    lines.push("BEGIN:VEVENT",`UID:${x.az.id}-${x.vid}-${d}@scadenzario-ssl`,`DTSTAMP:${stamp}`,`DTSTART;VALUE=DATE:${d}`,`DTEND;VALUE=DATE:${e}`,
+      `SUMMARY:${t((x.az.rsppStudio?"[RSPP] ":"")+x.az.nome+" – "+x.nome)}`,`DESCRIPTION:${t("Ultima data: "+(fmtData(x.ultima)||"—")+(x.nota?"\nNote: "+x.nota:"")+(x.gestito?"":"\nNon in carico allo studio"))}`,
       "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:Scadenza tra 30 giorni","TRIGGER:-P30D","END:VALARM","END:VEVENT"); }
   lines.push("END:VCALENDAR");
   scarica(`scadenzario_${oggiISO()}.ics`, lines.join("\r\n"), "text/calendar");
@@ -854,11 +987,11 @@ function vistaAziende(){
       <div class="stripe s-${r.peggiore}"></div>
       ${a.rsppStudio?`<div class="corner">${ico("shield")}RSPP</div>`:""}
       <div class="body">
-        <div class="name"><span>${esc(a.nome)}</span></div>
+        <div class="name">${esc(a.nome)}</div>
         <div class="meta">${[a.ateco?"ATECO "+esc(a.ateco):"", a.referente?"Ref. "+esc(a.referente):"", a.attiva===false?"archiviata":""].filter(Boolean).join(" · ")||"&nbsp;"}</div>
         <div class="counts">${cnt.length?cnt.map(([e,n,l])=>`<span class="badge b-${ESITI[e].c}">${n} ${l}</span>`).join(""):`<span class="ok-all">${ico("check")}Tutto in regola</span>`}</div>
       </div>
-      <div class="foot"><span>${r.prossima?`Prossima: <b style="color:var(--text)">${esc(r.prossima.nome)}</b> · ${fmtData(r.prossima.scadenza)}`:"Nessuna scadenza futura"}</span></div>
+      <div class="foot">${r.prossima?`Prossima: <b style="color:var(--text)">${esc(r.prossima.nome)}</b> · ${fmtData(r.prossima.scadenza)}`:"Nessuna scadenza futura"}</div>
     </a>`; };
   return `<div class="page-head"><div><h1>Aziende</h1><div class="sub">${az.length} visualizzate · ${nRspp} con RSPP dello studio</div></div>
     <button class="primary" id="btnNuova">${ico("plus")}Nuova azienda</button></div>
@@ -886,16 +1019,16 @@ async function nuovaAzienda(){
     <label>Referente interno<input name="referente" placeholder="chi segue l'azienda" list="refs"></label>
     <datalist id="refs">${referenti().map(r=>`<option value="${esc(r)}">`).join("")}</datalist>
     <label class="check full"><input type="checkbox" name="rsppStudio"> Lo studio svolge il ruolo di RSPP</label></div>
-    <p class="muted" style="font-size:12.5px">Tutti gli adempimenti partono come “Non pertinente” (tranne il DVR): li attivi poi dalla scheda.</p>`, ok:"Crea"});
+    <p class="muted" style="font-size:12.5px">Dopo la creazione si apre l'elenco degli adempimenti: spunta quelli pertinenti e quelli in carico allo studio.</p>`, ok:"Crea e configura"});
   if(!dialogoOk(r)||!r.nome.trim()) return;
   setBusy(1);
   try{
     let id=slug(r.nome), n=2; while(S.aziende.has(id) || await S.store.exists(id)) id=slug(r.nome)+"-"+(n++);
-    const ad={}; for(const c of catalogo()) ad[c.id]={applicabilita: c.id==="dvr"?"attivo":"np", storico:[], note:""};
     const a={nome:r.nome.trim(), attiva:true, rsppStudio:!!r.rsppStudio, referente:r.referente.trim(), ateco:r.ateco.trim(), soggettaCPI:"", rischioIncendio:"", classificazionePS:"", note:"",
-      adempimenti:ad, _meta:{versione:1, modificatoIl:oraISO(), modificatoDa:S.utente}, registro:[{quando:oraISO(),chi:S.utente,cosa:"Azienda creata"}]};
+      formato:2, voci:[{id:"dvr",cid:"dvr",applicabilita:"attivo",storico:[],note:""}], _meta:{versione:1, modificatoIl:oraISO(), modificatoDa:S.utente}, registro:[{quando:oraISO(),chi:S.utente,cosa:"Azienda creata"}]};
     const mt=await S.store.write(id,a); a.id=id; S.aziende.set(id,a); S.mtimes.set(id,mt);
-    location.hash="#/azienda/"+encodeURIComponent(id);
+    S.scheda.tab="vr"; location.hash="#/azienda/"+encodeURIComponent(id);
+    setTimeout(()=>configuraAdempimenti(id),200);
   }catch(e){ toast("Non creata: "+e.message,"err"); } finally{ setBusy(-1); }
 }
 
@@ -903,7 +1036,7 @@ async function nuovaAzienda(){
 function vistaAzienda(id){
   const a=S.aziende.get(id);
   if(!a) return `<div class="panel empty">Azienda non trovata. <a href="#/aziende">Torna all'elenco</a></div>`;
-  const voci=catalogo().map(c=>calcola(a,c.id)), r=riepilogoAzienda(a);
+  const voci=vociAzienda(a).map(v=>calcolaVoce(a,v)), r=riepilogoAzienda(a);
   const sc=S.scheda, isNp=x=>["np","non_serve"].includes(x.esito);
   const matchStato=(x,s)=> s==="pertinenti"? !isNp(x) : s==="np"? isNp(x) : x.esito===s;
   const sezUsate=sezioni().filter(s=>voci.some(x=>sezDi(x.cid)===s.id));
@@ -917,34 +1050,42 @@ function vistaAzienda(id){
       return `<button class="chipf ${sc.stato===k?"on":""} ${k!=="pertinenti"&&k!=="np"?"cf-"+(ESITI[k]?.c||k):""}" data-stato="${k}">${l} <b>${n}</b></button>`; }).join("");
   const elenco=vociTab.filter(x=>matchStato(x,sc.stato));
   const blocco=x=>{
-    const cat=catById(x.cid)||{}, aperto=S.aperti.has(id+"|"+x.cid), pertinente=!["np","non_serve"].includes(x.appl);
+    const cat=catById(x.cid)||{}, aperto=S.aperti.has(id+"|"+x.vid), pertinente=!["np","non_serve"].includes(x.appl);
     const st=(x.v.storico||[]).slice().sort((p,q)=>(q.data||"").localeCompare(p.data||""));
-    return `<div class="adm ${aperto?"open":""} ${["np","non_serve","nel_dvr"].includes(x.esito)?"dim":""} ${x.esito==="esterno"?"ext":""}" data-cid="${esc(x.cid)}">
-      <div class="adm-head" data-toggle="${esc(x.cid)}">
-        <div class="t"><span class="caret">▸</span>${esc(x.nome)}</div>
+    const gsel = x.v.gestione===true?"si":x.v.gestione===false?"no":"";
+    const gopz = {"":`Come da catalogo (${gestitoDefault(x.cid)?"in gestione":"non in gestione"})`, si:GESTIONE_OPZ.si, no:GESTIONE_OPZ.no};
+    return `<div class="adm ${aperto?"open":""} ${["np","non_serve","nel_dvr"].includes(x.esito)?"dim":""} ${x.esito==="esterno"?"ext":""}" data-vid="${esc(x.vid)}">
+      <div class="adm-head" data-toggle="${esc(x.vid)}">
+        <div class="t"><span class="caret">▸</span>${esc(x.nomeBase)}${x.etichetta?` <span class="et">– ${esc(x.etichetta)}</span>`:""}</div>
         <div class="hide-sm muted">${esc(APPLICABILITA[x.appl]||x.appl)}</div>
         <div class="hide-sm" title="Ultima data">${fmtData(x.ultima)||'<span class="muted">—</span>'}</div>
         <div class="hide-sm date" title="Scadenza">${fmtData(x.scadenza)||'<span class="muted">—</span>'}</div>
+        <div class="nt" title="${esc(x.nota)}">${esc(x.nota)}</div>
         <div><span class="badge b-${ESITI[x.esito].c}">${ESITI[x.esito].l}${x.giorni!==null&&x.giorni>=0&&["urgente","attenzione"].includes(x.esito)?` · ${x.giorni} gg`:""}</span></div>
-        <div class="hide-sm no-print" style="text-align:right"><button class="small" data-reg="${esc(id)}|${esc(x.cid)}">${ico("plus")}Registra</button></div>
+        <div class="hide-sm no-print" style="text-align:right"><button class="small" data-reg="${esc(id)}|${esc(x.vid)}">${ico("plus")}Registra</button></div>
       </div>
       <div class="adm-body">
         ${cat.riferimento?`<div class="ref">📖 ${esc(cat.riferimento)}${cat.prassi?" · <i>periodicità di prassi dello studio, non fissata dalla norma</i>":""}</div>`:""}
         <div class="settings no-print">
+          <label>Etichetta (es. “Capannone 2”, “Carroponte 5 t”)<input data-set="etichetta" value="${esc(x.v.etichetta||"")}" style="width:220px"></label>
           <label>Applicabilità<select data-set="applicabilita">${opzioni(APPLICABILITA,x.appl)}</select></label>
-          ${pertinente?`<label class="sw" title="Se togli la spunta la voce resta registrata ma non genera mai allarmi"><input type="checkbox" data-set="gestione" ${x.gestito?"checked":""}> Scadenza in gestione allo studio</label>`:""}
-          <label>Periodicità (anni)<input type="number" min="0" step="0.5" style="width:110px" data-set="periodicitaAnni" value="${esc(x.v.periodicitaAnni??"")}" placeholder="std: ${cat.periodicitaAnni??"nessuna"}"></label>
+          ${pertinente?`<label>Scadenza in carico allo studio<select data-set="gestione">${opzioni(gopz,gsel)}</select></label>`:""}
+          <label>Periodicità (anni)<input type="number" min="0" step="0.25" style="width:110px" data-set="periodicitaAnni" value="${esc(x.v.periodicitaAnni??"")}" placeholder="std: ${cat.periodicitaAnni??"nessuna"}"></label>
           <label>Scadenza manuale<input type="date" data-set="scadenzaManuale" value="${esc(x.v.scadenzaManuale||"")}" title="Usala solo se la scadenza non si calcola dall'ultima data (es. CPI con data di rinnovo diversa)"></label>
           <label style="flex:1;min-width:220px">Nota sull'adempimento<input data-set="note" value="${esc(x.v.note||"")}" placeholder="es. gestito dal manutentore / scade ogni 2 anni perché cantiere"></label>
         </div>
-        ${x.v.note?`<div class="ref" style="display:none" data-print-note>Nota: ${esc(x.v.note)}</div>`:""}
         <div class="tablewrap" style="border:1px solid var(--line);background:var(--panel)"><table>
           <thead><tr><th>Data</th><th>Rev.</th><th>Prot.</th><th>Stato</th><th>Note</th><th class="no-print"></th></tr></thead>
           <tbody>${st.map(r=>`<tr><td class="nowrap">${fmtData(r.data)||'<span class="muted">senza data</span>'}</td><td>${esc(r.rev)}</td><td>${esc(r.prot)}</td>
             <td>${r.stato?`<span title="${esc(STATI_RIGA[r.stato]||"")}">${esc(r.stato)}</span>`:""}</td><td>${esc(r.note)}</td>
             <td class="nowrap no-print" style="text-align:right"><button class="small" data-edit="${esc(rowKey(r))}">Modifica</button> <button class="small danger" data-del="${esc(rowKey(r))}">Elimina</button></td></tr>`).join("")
             || `<tr><td colspan="6" class="muted">Nessuna revisione registrata.</td></tr>`}</tbody></table></div>
-        <div style="margin-top:10px" class="no-print"><button class="small primary" data-reg="${esc(id)}|${esc(x.cid)}">${ico("plus")}Registra aggiornamento</button></div>
+        <div class="row no-print" style="margin-top:10px">
+          <button class="small primary" data-reg="${esc(id)}|${esc(x.vid)}">${ico("plus")}Registra aggiornamento</button>
+          <button class="small" data-dup="${esc(x.cid)}" title="Aggiunge un'altra voce dello stesso tipo (es. seconda SCIA, altro apparecchio)">${ico("copy")}Aggiungi un'altra voce “${esc(x.nomeBase)}”</button>
+          <span class="spacer"></span>
+          ${x.v._virtuale?"":`<button class="small danger" data-delvoce="${esc(x.vid)}">${ico("trash")}Elimina questa voce</button>`}
+        </div>
       </div></div>`;
   };
   const stat=[["scaduto",r.scaduto,"scaduti"],["urgente",r.urgente,"entro 30 gg"],["attenzione",r.attenzione,"entro 180 gg"],["dafare",r.dafare,"da fare"],["ok",r.ok,"in regola"]].filter(x=>x[1]);
@@ -953,14 +1094,15 @@ function vistaAzienda(id){
     <div style="flex:1;min-width:240px"><div class="big">${esc(a.nome)} ${a.rsppStudio?RSPP_TAG:""} ${a.attiva===false?'<span class="badge b-np">archiviata</span>':""}</div>
       <div class="muted" style="margin-top:4px">${[a.ateco?"ATECO "+esc(a.ateco):"", a.referente?"Referente: "+esc(a.referente):"", "Ultima modifica: "+esc(a._meta?.modificatoDa||"—")+" · "+fmtQuando(a._meta?.modificatoIl)].filter(Boolean).join(" · ")}</div></div>
     <div class="stats">${stat.map(([e,n,l])=>`<span class="badge b-${ESITI[e].c}" style="font-size:13px;padding:4px 11px">${n} ${l}</span>`).join("")}</div>
-    <button class="no-print" id="btnStampa">${ico("print")}Stampa / PDF</button>
+    <div class="row no-print"><button id="btnConfig">${ico("sliders")}Configura adempimenti</button><button id="btnStampa">${ico("print")}Stampa / PDF</button></div>
   </div>
   ${a.note?`<div class="panel pad" style="margin-bottom:14px;white-space:pre-wrap"><b>Note:</b> ${esc(a.note)}</div>`:""}
   <div class="tabs no-print">${tabs}</div>
   ${["anag","registro"].includes(sc.tab)?"":`
-  <div class="chips no-print">${chips}</div>
+  <div class="toolbar no-print"><div class="chips">${chips}</div>
+    <button class="small" id="btnAddVoce">${ico("plus")}Aggiungi voce</button></div>
   <div class="panel">${elenco.map(blocco).join("")||`<div class="empty">Nessun adempimento in questo stato.</div>`}</div>
-  <p class="muted no-print" style="font-size:12.5px">Gli adempimenti <b>non in gestione</b> restano visibili con la loro data, ma non contano mai come critici. Per cambiare sezione a un adempimento: Impostazioni → Catalogo.</p>`}
+  <p class="muted no-print" style="font-size:12.5px">Le voci <b>non in gestione</b> restano visibili con la loro data, ma non contano mai come critiche. Lo stesso adempimento si può aggiungere più volte (es. più SCIA o più apparecchi), ognuno con la sua etichetta.</p>`}
   ${sc.tab!=="anag"?"":`
   <div class="panel pad" id="anag">
     <div class="form">
@@ -979,59 +1121,114 @@ function vistaAzienda(id){
   </div>`}
   ${sc.tab!=="registro"?"":`<div class="panel pad log" style="max-height:none">${(a.registro||[]).slice(0,300).map(l=>`<div><span class="muted">${fmtQuando(l.quando)} · ${esc(l.chi)}</span> — ${esc(l.cosa)}</div>`).join("")||"—"}</div>`}`;
 }
+async function aggiungiVoce(id, cidPre){
+  const az=S.aziende.get(id), sez=cidPre?sezDi(cidPre):S.scheda.tab;
+  const r=await dialogo({titolo:`${az.nome}: aggiungi voce`, corpo:`<div class="form">
+      <label class="full">Adempimento<select name="cid" required>${opzioniCat(cidPre||"",{sez:["anag","registro"].includes(sez)?"":sez,vuota:""})}</select></label>
+      <label class="full">Etichetta per distinguerla<input name="etichetta" autofocus placeholder="es. Capannone 2 · Carroponte 5 t · Muletto Linde"></label>
+      <label>Periodicità (anni, vuoto = standard)<input name="per" type="number" min="0" step="0.25"></label>
+      <label>Scadenza in carico allo studio<select name="gestione">${opzioni({"":"Come da catalogo",si:"Sì",no:"No (solo informativa)"},"")}</select></label>
+      <label class="full">Nota<input name="note"></label></div>`, ok:"Aggiungi"});
+  if(!dialogoOk(r)||!r.cid) return;
+  const nome=(catById(r.cid)?.nome||r.cid)+(r.etichetta.trim()?" – "+r.etichetta.trim():"");
+  const vid=r.cid+"-"+uid();
+  await modifica(id, `Aggiunta voce: ${nome}`, az=>{
+    normalizzaAzienda(az);
+    // se l'adempimento non era mai stato usato, la voce base (virtuale) resta NP: la nuova è indipendente
+    const v={id:vid, cid:r.cid, etichetta:r.etichetta.trim(), applicabilita:"attivo", storico:[], note:r.note.trim()};
+    if(r.per!=="") v.periodicitaAnni=Number(r.per);
+    if(r.gestione==="si") v.gestione=true; else if(r.gestione==="no") v.gestione=false;
+    az.voci.push(v);
+  });
+  S.aperti.add(id+"|"+vid); S.scheda.tab=sezDi(r.cid); S.scheda.stato="pertinenti"; render();
+}
+async function configuraAdempimenti(id){
+  const az=S.aziende.get(id); if(!az) return;
+  const voci=vociAzienda(az);
+  const righe=sezioni().map(s=>{ const vs=voci.filter(v=>sezDi(v.cid)===s.id); if(!vs.length) return "";
+    return `<tr class="sezrow"><td colspan="3">${esc(s.nome)}</td></tr>`+vs.map(v=>{ const x=calcolaVoce(az,v), pert=!["np","non_serve"].includes(x.appl);
+      const g=v.gestione===true?"si":v.gestione===false?"no":"";
+      return `<tr><td>${esc(x.nomeBase)}${x.etichetta?` <span class="tag">${esc(x.etichetta)}</span>`:""}${x.ultima?` <span class="muted" style="font-size:12px">· ultima ${fmtData(x.ultima)}</span>`:""}</td>
+        <td class="ctr"><input type="checkbox" name="p__${esc(v.id)}" ${pert?"checked":""}></td>
+        <td><select name="g__${esc(v.id)}">${opzioni({"":`Come da catalogo (${gestitoDefault(v.cid)?"sì":"no"})`,si:"Sì",no:"No"},g)}</select></td></tr>`; }).join(""); }).join("");
+  const r=await dialogo({titolo:`${az.nome}: configura adempimenti`, largo:true, ok:"Salva configurazione", corpo:
+    `<p class="muted" style="margin-top:0">Spunta gli adempimenti <b>pertinenti</b> per questa azienda e indica se la scadenza è <b>in carico allo studio</b>. Togliere la spunta “pertinente” imposta la voce come NP (lo storico resta). Per aggiungere lo stesso adempimento più volte usa “Aggiungi voce” nella scheda.</p>
+    <div class="tablewrap" style="border:1px solid var(--line)"><table class="cat cfg-table"><thead><tr><th>Adempimento</th><th class="ctr">Pertinente</th><th>In carico allo studio</th></tr></thead><tbody>${righe}</tbody></table></div>`});
+  if(!dialogoOk(r)) return;
+  const modifiche=[];
+  for(const v of voci){
+    const pert=!!r["p__"+v.id], g=r["g__"+v.id]||"", eraPert=!["np","non_serve"].includes(v.applicabilita||"np"), eraG=v.gestione===true?"si":v.gestione===false?"no":"";
+    if(pert!==eraPert || g!==eraG) modifiche.push({vid:v.id, pert, eraPert, g, eraG});
+  }
+  if(!modifiche.length){ toast("Nessuna modifica"); return; }
+  await modifica(id, `Configurazione adempimenti: ${modifiche.length} voci modificate`, az=>{
+    for(const m of modifiche){ const v=voceMut(az,m.vid); if(!v) continue;
+      if(m.pert!==m.eraPert) v.applicabilita = m.pert ? (v.applicabilita==="np"||v.applicabilita==="non_serve"||!v.applicabilita ? "attivo" : v.applicabilita) : "np";
+      if(m.g!==m.eraG){ if(m.g==="si") v.gestione=true; else if(m.g==="no") v.gestione=false; else delete v.gestione; } }
+  });
+}
 function bindAzienda(id){
   const a=S.aziende.get(id); if(!a) return;
   $$("[data-tab]").forEach(b=>b.onclick=()=>{ if(S.dirty && !confirm("Hai modifiche non salvate nell'anagrafica. Scartarle?")) return; S.dirty=false; S.scheda.tab=b.dataset.tab; S.scheda.stato="pertinenti"; render(); });
   $$("[data-stato]").forEach(b=>b.onclick=()=>{ S.scheda.stato=b.dataset.stato; render(); });
   $("#btnStampa").onclick=()=>window.print();
+  $("#btnConfig").onclick=()=>configuraAdempimenti(id);
+  if($("#btnAddVoce")) $("#btnAddVoce").onclick=()=>aggiungiVoce(id);
+  $$("[data-dup]").forEach(b=>b.onclick=()=>aggiungiVoce(id,b.dataset.dup));
+  $$("[data-delvoce]").forEach(b=>b.onclick=async()=>{
+    const vid=b.dataset.delvoce, v=trovaVoce(a,vid); if(!v) return; const x=calcolaVoce(a,v), n=(v.storico||[]).length;
+    if(!confirm(`Eliminare la voce “${x.nome}”${n?` con ${n} revisioni registrate`:""}? L'operazione resta nel registro modifiche ma i dati della voce vengono cancellati.`)) return;
+    await modifica(id, `Eliminata voce: ${x.nome}${n?` (${n} revisioni)`:""}`, az=>{ normalizzaAzienda(az); const i=az.voci.findIndex(y=>y.id===vid); if(i<0) return false; az.voci.splice(i,1); });
+  });
   const btn=$("#btnAnag");
   if(btn){
-  $$("#anag [data-f]").forEach(el=>el.addEventListener("input",()=>{ S.dirty=true; btn.disabled=false; }));
-  btn.onclick=async()=>{
-    const val={}; $$("#anag [data-f]").forEach(el=>val[el.dataset.f]= el.type==="checkbox"?el.checked:el.value.trim());
-    if(!val.nome){ toast("La ragione sociale non può essere vuota","err"); return; }
-    const camb=Object.keys(val).filter(k=>(a[k]??(typeof val[k]==="boolean"?false:""))!==val[k]);
-    S.dirty=false;
-    if(!camb.length){ render(); return; }
-    await modifica(id, "Anagrafica modificata: "+camb.join(", "), az=>{ for(const k of camb) az[k]=val[k]; });
-  };
-  $("#btnArch").onclick=async()=>{
-    const arch=a.attiva!==false;
-    if(arch && !confirm(`Archiviare ${a.nome}? Non comparirà più nelle scadenze (i dati restano e puoi riattivarla).`)) return;
-    await modifica(id, arch?"Azienda archiviata":"Azienda riattivata", az=>{ az.attiva=!arch; });
-  };
+    $$("#anag [data-f]").forEach(el=>el.addEventListener("input",()=>{ S.dirty=true; btn.disabled=false; }));
+    btn.onclick=async()=>{
+      const val={}; $$("#anag [data-f]").forEach(el=>val[el.dataset.f]= el.type==="checkbox"?el.checked:el.value.trim());
+      if(!val.nome){ toast("La ragione sociale non può essere vuota","err"); return; }
+      const camb=Object.keys(val).filter(k=>(a[k]??(typeof val[k]==="boolean"?false:""))!==val[k]);
+      S.dirty=false;
+      if(!camb.length){ render(); return; }
+      await modifica(id, "Anagrafica modificata: "+camb.join(", "), az=>{ for(const k of camb) az[k]=val[k]; });
+    };
+    $("#btnArch").onclick=async()=>{
+      const arch=a.attiva!==false;
+      if(arch && !confirm(`Archiviare ${a.nome}? Non comparirà più nelle scadenze (i dati restano e puoi riattivarla).`)) return;
+      await modifica(id, arch?"Azienda archiviata":"Azienda riattivata", az=>{ az.attiva=!arch; });
+    };
   }
   $$("[data-toggle]").forEach(el=>el.onclick=e=>{ if(e.target.closest("button")) return; const k=id+"|"+el.dataset.toggle;
     S.aperti.has(k)?S.aperti.delete(k):S.aperti.add(k); el.parentElement.classList.toggle("open"); });
   $$(".adm [data-set]").forEach(el=>el.addEventListener("change",async()=>{
-    const cid=el.closest(".adm").dataset.cid, campo=el.dataset.set, nome=catById(cid)?.nome||cid;
-    let val = el.type==="checkbox" ? el.checked : el.value.trim();
+    const vid=el.closest(".adm").dataset.vid, campo=el.dataset.set, v0=trovaVoce(a,vid), nome=calcolaVoce(a,v0).nome;
+    let val = el.value.trim();
     if(campo==="periodicitaAnni" && val!=="") { val=Number(String(val).replace(",", ".")); if(isNaN(val)||val<0){ toast("Periodicità non valida","err"); return; } }
-    S.aperti.add(id+"|"+cid);
+    S.aperti.add(id+"|"+vid);
     const descr = campo==="applicabilita" ? `${nome}: applicabilità → ${APPLICABILITA[val]}`
-      : campo==="gestione" ? `${nome}: ${val?"scadenza ora in gestione allo studio":"scadenza non in gestione (solo informativa)"}`
+      : campo==="gestione" ? `${nome}: in carico allo studio → ${val==="si"?"sì":val==="no"?"no (solo informativa)":"come da catalogo"}`
       : campo==="periodicitaAnni" ? `${nome}: periodicità → ${val===""?"standard":val+" anni"}`
-      : campo==="scadenzaManuale" ? `${nome}: scadenza manuale → ${val?fmtData(val):"rimossa"}` : `${nome}: nota aggiornata`;
-    await modifica(id, descr, az=>{ const v=voce(az,cid);
-      if(campo==="gestione"){ if(val) delete v.gestione; else v.gestione=false; return; }
-      if(val===""&&campo!=="note"&&campo!=="applicabilita") delete v[campo]; else v[campo]=val; });
+      : campo==="scadenzaManuale" ? `${nome}: scadenza manuale → ${val?fmtData(val):"rimossa"}`
+      : campo==="etichetta" ? `${nome}: etichetta → “${val}”` : `${nome}: nota aggiornata`;
+    await modifica(id, descr, az=>{ const v=voceMut(az,vid); if(!v) return false;
+      if(campo==="gestione"){ if(val==="si") v.gestione=true; else if(val==="no") v.gestione=false; else delete v.gestione; return; }
+      if(val===""&&!["note","applicabilita","etichetta"].includes(campo)) delete v[campo]; else v[campo]=val; });
   }));
   $$(".adm [data-edit]").forEach(b=>b.onclick=async()=>{
-    const cid=b.closest(".adm").dataset.cid, k=b.dataset.edit, nome=catById(cid)?.nome||cid;
-    const r0=(a.adempimenti[cid].storico||[]).find(r=>rowKey(r)===k); if(!r0) return;
+    const vid=b.closest(".adm").dataset.vid, k=b.dataset.edit, v0=trovaVoce(a,vid), nome=calcolaVoce(a,v0).nome;
+    const r0=(v0.storico||[]).find(r=>rowKey(r)===k); if(!r0) return;
     const r=await dialogo({titolo:`${nome}: modifica revisione`, corpo:formRiga(r0), ok:"Salva"}); if(!dialogoOk(r)) return;
     await modifica(id, `${nome}: modificata revisione del ${fmtData(r0.data)}`, az=>{
-      const riga=(az.adempimenti?.[cid]?.storico||[]).find(x=>rowKey(x)===k);
+      const v=voceMut(az,vid); const riga=(v?.storico||[]).find(x=>rowKey(x)===k);
       if(!riga){ toast("Questa riga è stata modificata o eliminata da un collega: controlla e riprova.","err"); return false; }
-      Object.assign(riga,{id:riga.id||uid(), data:r.data, rev:r.rev.trim(), prot:r.prot.trim(), stato:r.stato, note:r.note.trim()});
+      Object.assign(riga,{id:riga.id||"r"+uid(), data:r.data, rev:r.rev.trim(), prot:r.prot.trim(), stato:r.stato, note:r.note.trim()});
     });
   });
   $$(".adm [data-del]").forEach(b=>b.onclick=async()=>{
-    const cid=b.closest(".adm").dataset.cid, k=b.dataset.del, nome=catById(cid)?.nome||cid;
-    const r0=(a.adempimenti[cid].storico||[]).find(r=>rowKey(r)===k); if(!r0) return;
+    const vid=b.closest(".adm").dataset.vid, k=b.dataset.del, v0=trovaVoce(a,vid), nome=calcolaVoce(a,v0).nome;
+    const r0=(v0.storico||[]).find(r=>rowKey(r)===k); if(!r0) return;
     if(!confirm(`Eliminare la revisione del ${fmtData(r0.data)||"(senza data)"} di ${nome}?`)) return;
     await modifica(id, `${nome}: eliminata revisione del ${fmtData(r0.data)} (rev. ${r0.rev||"-"}, note: ${r0.note||"-"})`, az=>{
-      const st=az.adempimenti?.[cid]?.storico||[]; const i=st.findIndex(x=>rowKey(x)===k);
+      const v=voceMut(az,vid); const st=v?.storico||[]; const i=st.findIndex(x=>rowKey(x)===k);
       if(i<0){ toast("Riga già eliminata da un collega.","err"); return false; } st.splice(i,1);
     });
   });
@@ -1039,73 +1236,165 @@ function bindAzienda(id){
 
 /* ------------------------------ matrice --------------------------------- */
 function vistaMatrice(){
-  const f=S.filtri, cat=catalogo().filter(c=>!S.matSez||sezDi(c.id)===S.matSez);
-  const tabs=[...sezioni().filter(s=>catalogo().some(c=>sezDi(c.id)===s.id)).map(s=>`<button class="tab ${S.matSez===s.id?"on":""}" data-msez="${s.id}">${esc(s.nome)}</button>`),
+  const f=S.filtri, cat=catOrdinato().filter(c=>!S.matSez||sezDiItem(c)===S.matSez);
+  const tabs=[...sezioni().filter(s=>catOrdinato().some(c=>sezDiItem(c)===s.id)).map(s=>`<button class="tab ${S.matSez===s.id?"on":""}" data-msez="${s.id}">${esc(s.nome)}</button>`),
     `<button class="tab ${!S.matSez?"on":""}" data-msez="">Tutto</button>`].join("");
   const az=[...S.aziende.values()].filter(a=>a.attiva!==false && (!f.rspp||a.rsppStudio)).sort((a,b)=>a.nome.localeCompare(b.nome));
   const testo=x=> x.esito==="np"?"NP": x.esito==="non_serve"?"—": x.esito==="nel_dvr"?"DVR": x.esito==="dafare"?"da fare": x.esito==="senza"?fmtMeseAnno(x.ultima): x.esito==="esterno"?(fmtMeseAnno(x.scadenza)||fmtMeseAnno(x.ultima)||"est."): fmtMeseAnno(x.scadenza);
-  return `<div class="page-head"><div><h1>Matrice</h1><div class="sub">Aziende × adempimenti · ogni cella mostra la scadenza (mese/anno), clic per aprire la scheda</div></div></div>
+  const cella=(a,c,vv)=>{ const xs=vv.filter(v=>v.cid===c.id).map(v=>calcolaVoce(a,v));
+    const pert=xs.filter(x=>!["np","non_serve"].includes(x.esito));
+    const x=xs.slice().sort((p,q)=>PRIORITA.indexOf(p.esito)-PRIORITA.indexOf(q.esito)||(p.scadenza||"9").localeCompare(q.scadenza||"9"))[0];
+    const tip=xs.map(y=>`${y.nome}: ${ESITI[y.esito].l}${y.scadenza?" – "+fmtData(y.scadenza):""}`).join("\n");
+    return `<td class="c c-${ESITI[x.esito].c}" data-open="${esc(a.id)}|${esc(x.vid)}" title="${esc(tip)}">${esc(testo(x))}${pert.length>1?` <b>×${pert.length}</b>`:""}</td>`; };
+  return `<div class="page-head"><div><h1>Matrice</h1><div class="sub">Aziende × adempimenti · ogni cella mostra la scadenza (mese/anno); con più voci dello stesso tipo mostra la più critica e il numero (×2…)</div></div></div>
   <div class="tabs">${tabs}</div>
   <div class="filters"><label><input type="checkbox" id="mrspp" ${f.rspp?"checked":""}> solo ${RSPP_TAG}</label></div>
   <div class="legend">${["scaduto","urgente","attenzione","ok","dafare","senza","nel_dvr","esterno"].map(e=>`<span class="badge b-${ESITI[e].c}">${ESITI[e].l}</span>`).join("")}<span class="badge b-np">NP</span></div>
   <div class="panel tablewrap" style="max-height:75vh"><table class="matrix"><thead><tr><th class="az">Azienda</th>${cat.map(c=>`<th title="${esc(c.nome)}">${esc(c.nome)}</th>`).join("")}</tr></thead>
-  <tbody>${az.map(a=>`<tr class="${a.rsppStudio?"is-rspp":""}"><td class="az" title="${esc(a.nome)}"><a href="#/azienda/${encodeURIComponent(a.id)}">${a.rsppStudio?"🛡 ":""}${esc(a.nome)}</a></td>${cat.map(c=>{ const x=calcola(a,c.id);
-    return `<td class="c c-${ESITI[x.esito].c}" data-open="${esc(a.id)}|${esc(c.id)}" title="${esc(c.nome)}: ${esc(ESITI[x.esito].l)}${x.scadenza?" – "+fmtData(x.scadenza):""}">${esc(testo(x))}</td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
+  <tbody>${az.map(a=>{ const vv=vociAzienda(a); return `<tr class="${a.rsppStudio?"is-rspp":""}"><td class="az" title="${esc(a.nome)}"><a href="#/azienda/${encodeURIComponent(a.id)}">${a.rsppStudio?"🛡 ":""}${esc(a.nome)}</a></td>${cat.map(c=>cella(a,c,vv)).join("")}</tr>`; }).join("")}</tbody></table></div>`;
 }
 function bindMatrice(){
   $("#mrspp").onchange=e=>{ S.filtri.rspp=e.target.checked; salvaFiltri(); render(); };
   $$("[data-msez]").forEach(b=>b.onclick=()=>{ S.matSez=b.dataset.msez; render(); });
-  $$("[data-open]").forEach(td=>td.onclick=()=>{ const [id,cid]=td.dataset.open.split("|"); S.aperti.add(id+"|"+cid); S.scheda.tab=sezDi(cid); S.scheda.stato="pertinenti"; location.hash="#/azienda/"+encodeURIComponent(id); });
+  $$("[data-open]").forEach(td=>td.onclick=()=>{ const [id,vid]=td.dataset.open.split("|"); apriVoce(id,vid); });
 }
+function apriVoce(id,vid){ const a=S.aziende.get(id), v=a&&trovaVoce(a,vid); S.aperti.add(id+"|"+vid); if(v){ S.scheda.tab=sezDi(v.cid); S.scheda.stato="pertinenti"; } location.hash="#/azienda/"+encodeURIComponent(id); }
 
 /* ---------------------------- impostazioni ------------------------------ */
+function cidConStorico(){ const s=new Set(); for(const a of S.aziende.values()) for(const v of (a.voci||[])) if((v.storico||[]).length) s.add(v.cid); return s; }
 function vistaImpostazioni(){
-  const s=soglie();
+  const s=soglie(), st=S.config?.studio||{}, usati=cidConStorico();
+  const righeCat=sezioni().map(sz=>{ const items=catOrdinato(true).filter(c=>sezDiItem(c)===sz.id);
+    return `<tr class="sezrow"><td colspan="8">${esc(sz.nome)} <span style="font-weight:500;opacity:.8">(${items.filter(c=>!c.nascosto).length})</span></td></tr>`+items.map((c,i)=>`<tr data-cat="${esc(c.id)}" class="${c.nascosto?"nascosto":""}">
+      <td class="nowrap"><button class="small icon" data-mv="-1" title="Sposta su" ${i===0?"disabled":""}>${ico("up")}</button><button class="small icon" data-mv="1" title="Sposta giù" ${i===items.length-1?"disabled":""}>${ico("down")}</button></td>
+      <td><input data-c="nome" value="${esc(c.nome)}" style="width:100%;min-width:150px">${c.nascosto?'<div class="muted" style="font-size:11.5px">nascosto</div>':""}</td>
+      <td><select data-c="sezione">${sezioni().map(x=>`<option value="${x.id}"${x.id===sezDiItem(c)?" selected":""}>${esc(x.nome)}</option>`).join("")}</select></td>
+      <td><input data-c="periodicitaAnni" type="number" min="0" step="0.25" value="${esc(c.periodicitaAnni??"")}" placeholder="nessuna" style="width:80px"></td>
+      <td><input data-c="riferimento" value="${esc(c.riferimento||"")}" style="width:100%;min-width:160px" title="${esc(c.riferimento||"")}"></td>
+      <td class="ctr"><input data-c="prassi" type="checkbox" ${c.prassi?"checked":""} title="Periodicità decisa dallo studio, non dalla norma"></td>
+      <td class="ctr"><input data-c="nonGestito" type="checkbox" ${c.nonGestito?"checked":""} title="Di norma la scadenza NON è in carico allo studio"></td>
+      <td class="nowrap"><button class="small" data-savecat>Salva</button>
+        <button class="small icon" data-hide title="${c.nascosto?"Ripristina":"Nascondi ovunque (i dati restano)"}">${ico(c.nascosto?"eye":"eyeoff")}</button>
+        ${usati.has(c.id)?"":`<button class="small icon danger" data-delcat title="Elimina (nessuna azienda ha date registrate)">${ico("trash")}</button>`}</td></tr>`).join(""); }).join("");
   return `<div class="page-head"><div><h1>Impostazioni</h1><div class="sub">Versione ${APP_VERSION}</div></div></div>
-  <div class="panel pad"><h2 style="margin-top:0">Tu</h2>
+  <div class="panel pad"><h2 style="margin-top:0">Studio</h2>
+    <div class="row" style="align-items:flex-end;gap:16px">
+      <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted)">Nome dello studio (nel banner)<input id="stNome" value="${esc(st.nome||"")}" style="width:260px"></label>
+      <button id="btnStNome">Salva nome</button>
+      <div class="logo-prev">${st.logo?`<img src="${esc(st.logo)}" alt="Logo">`:'<span class="muted" style="font-size:12.5px">Nessun logo</span>'}</div>
+      <label class="row" style="gap:6px"><button type="button" id="btnLogo">Carica logo…</button><input type="file" id="fileLogo" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden></label>
+      ${st.logo?'<button id="btnNoLogo" class="danger">Rimuovi logo</button>':""}
+    </div>
+    <p class="muted" style="font-size:12.5px;margin-bottom:0">Il logo viene ridimensionato automaticamente e salvato nella cartella condivisa: lo vedranno tutti i colleghi.</p></div>
+  <div class="panel pad" style="margin-top:14px"><h2 style="margin-top:0">Tu</h2>
     <div class="row"><span>Nome nel registro modifiche: <b>${esc(S.utente||"—")}</b></span><button id="btnUtente">Cambia</button></div></div>
-  <div class="panel pad" style="margin-top:14px"><h2 style="margin-top:0">Cartella dati</h2>
-    <p>Stai lavorando su: <b>${esc(S.store.label)}</b>${S.demo?" (dati di prova salvati solo in questo browser)":""}</p>
-    <div class="row"><button id="btnCambia">Cambia cartella</button><button id="btnBackup">${ico("download")}Scarica backup completo (JSON)</button>${S.demo?'<button id="btnResetDemo" class="danger">Azzera demo</button>':""}</div></div>
-  <div class="panel pad" style="margin-top:14px"><h2 style="margin-top:0">App desktop</h2>
-    <p class="muted" style="margin-top:0">Da Chrome o Edge, quando l'app è aperta dal sito GitHub Pages, puoi installarla: avrà una sua finestra, l'icona nel menu Start/Dock e si aggiornerà da sola.</p>
-    <div class="row"><button id="btnInstall2" ${S.installPrompt?"":"disabled"}>⬇ Installa come app</button>
-    <span class="muted" style="font-size:12.5px">${matchMedia("(display-mode: standalone)").matches?"✔ Stai già usando l'app installata.":S.installPrompt?"":"Se il pulsante è disattivato: l'app è già installata, oppure apri la pagina da GitHub Pages (non da file locale), oppure usa il menu ⋮ del browser → “Installa Scadenzario SSL e Ambiente”."}</span></div></div>
+  <div class="panel" style="margin-top:14px"><div class="pad"><h2 style="margin:0">Catalogo adempimenti</h2>
+    <p class="muted" style="margin-bottom:0">L'ordine qui (frecce ↑ ↓) è quello usato nelle tendine, nelle schede e nella matrice. <b>Non in carico</b> = di norma la scadenza non è gestita dallo studio: vale per tutte le aziende, salvo eccezioni impostate nella singola scheda. Gli adempimenti con date registrate non si eliminano: si possono <b>nascondere</b> (i dati restano e si possono ripristinare).</p></div>
+    <div class="tablewrap"><table class="cat"><thead><tr><th>Ordine</th><th>Adempimento</th><th>Sezione</th><th>Period. (anni)</th><th>Riferimento normativo</th><th class="ctr">Prassi</th><th class="ctr">Non in carico</th><th></th></tr></thead>
+    <tbody>${righeCat}</tbody></table></div>
+    <div class="pad"><button id="btnAddCat">${ico("plus")}Aggiungi adempimento</button></div></div>
+  <div class="panel pad" style="margin-top:14px"><h2 style="margin-top:0">Modifica in blocco</h2>
+    <p class="muted" style="margin-top:0">Applica la stessa impostazione a un adempimento in molte aziende insieme (es. “Apparecchi di sollevamento → non in carico” o “HACCP → NP dove non c'è nessuna data”). Ogni modifica finisce nel registro dell'azienda.</p>
+    <div class="form">
+      <label>Adempimento<select id="bkCid">${opzioniCat("",{vuota:""})}</select></label>
+      <label>Aziende<select id="bkAmbito">${opzioni({tutte:"Tutte le aziende attive",rspp:"Solo con RSPP dello studio",nonrspp:"Solo senza RSPP dello studio"},"tutte")}</select></label>
+      <label>Solo le voci che<select id="bkCond">${opzioni({qualsiasi:"qualsiasi stato",dagestire:"sono “Da valutare”",senzadate:"non hanno nessuna data registrata",condate:"hanno almeno una data registrata",applicabili:"sono applicabili"},"qualsiasi")}</select></label>
+      <label>Imposta<select id="bkAzione">${opzioni({no:"Non in carico allo studio",si:"In carico allo studio",cat:"In carico: come da catalogo (toglie le eccezioni)",np:"Applicabilità: NP",non_serve:"Applicabilità: Non serve",attivo:"Applicabilità: Applicabile",da_gestire:"Applicabilità: Da valutare",nel_dvr:"Applicabilità: Valutato nel DVR"},"no")}</select></label>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="primary" id="btnBulk">Applica…</button><span class="muted" id="bkInfo" style="font-size:12.5px"></span></div></div>
   <div class="panel pad" style="margin-top:14px"><h2 style="margin-top:0">Soglie di avviso</h2>
     <div class="row"><label>Urgente entro <input type="number" id="sUrg" value="${s.urgente}" style="width:80px"> giorni</label>
     <label>Attenzione entro <input type="number" id="sAtt" value="${s.attenzione}" style="width:80px"> giorni</label><button id="btnSoglie">Salva soglie</button></div></div>
-  <div class="panel" style="margin-top:14px"><div class="pad"><h2 style="margin:0">Catalogo adempimenti</h2>
-    <p class="muted" style="margin-bottom:0">La periodicità qui è quella standard: per una singola azienda puoi cambiarla dalla scheda. Le voci “prassi” hanno una periodicità decisa dallo studio, non imposta dalla norma.</p></div>
-    <div class="tablewrap"><table><thead><tr><th>Adempimento</th><th>Sezione</th><th class="num">Periodicità std (anni)</th><th>Riferimento normativo</th><th>Prassi</th><th></th></tr></thead>
-    <tbody>${sezioni().flatMap(s=>catalogo().filter(c=>sezDi(c.id)===s.id)).map(c=>`<tr data-cat="${esc(c.id)}"><td><input data-c="nome" value="${esc(c.nome)}" style="width:100%;min-width:160px"></td>
-      <td><select data-c="sezione">${sezioni().map(s=>`<option value="${s.id}"${s.id===sezDi(c.id)?" selected":""}>${esc(s.nome)}</option>`).join("")}</select></td>
-      <td class="num"><input data-c="periodicitaAnni" type="number" min="0" step="0.5" value="${esc(c.periodicitaAnni??"")}" placeholder="nessuna" style="width:90px"></td>
-      <td><input data-c="riferimento" value="${esc(c.riferimento||"")}" style="width:100%;min-width:260px"></td>
-      <td><input data-c="prassi" type="checkbox" ${c.prassi?"checked":""}></td><td><button class="small" data-savecat>Salva</button></td></tr>`).join("")}</tbody></table></div>
-    <div class="pad"><button id="btnAddCat">${ico("plus")}Aggiungi adempimento</button></div></div>`;
+  <div class="panel pad" style="margin-top:14px"><h2 style="margin-top:0">Cartella dati e app</h2>
+    <p>Stai lavorando su: <b>${esc(S.store.label)}</b>${S.demo?" (dati di prova salvati solo in questo browser)":""}</p>
+    <div class="row"><button id="btnCambia">Cambia cartella</button><button id="btnBackup">${ico("download")}Scarica backup completo (JSON)</button>${S.demo?'<button id="btnResetDemo" class="danger">Azzera demo</button>':""}
+    <button id="btnInstall2" ${S.installPrompt?"":"disabled"}>⬇ Installa come app</button></div>
+    <p class="muted" style="font-size:12.5px;margin-bottom:0">${matchMedia("(display-mode: standalone)").matches?"✔ Stai già usando l'app installata.":"Per installare l'app apri la pagina da GitHub Pages con Chrome o Edge (oppure menu ⋮ del browser → “Installa Scadenzario SSL e Ambiente”)."}</p></div>`;
 }
+function bersagliBulk(cid, ambito, cond){
+  const out=[];
+  for(const a of S.aziende.values()){
+    if(a.attiva===false) continue;
+    if(ambito==="rspp"&&!a.rsppStudio) continue; if(ambito==="nonrspp"&&a.rsppStudio) continue;
+    const vs=vociAzienda(a).filter(v=>v.cid===cid && condBulk(v,cond));
+    if(vs.length) out.push({a, vids:vs.map(v=>v.id)});
+  }
+  return out;
+}
+function condBulk(v,cond){ const date=(v.storico||[]).some(r=>r.data), ap=v.applicabilita||"np";
+  return cond==="dagestire"? ap==="da_gestire" : cond==="senzadate"? !date : cond==="condate"? date : cond==="applicabili"? ap==="attivo" : true; }
 function bindImpostazioni(){
   $("#btnUtente").onclick=cambiaUtente;
+  $("#btnStNome").onclick=()=>{ const n=$("#stNome").value.trim(); modificaConfig("nome studio", c=>{ c.studio=Object.assign({},c.studio,{nome:n}); }); };
+  $("#btnLogo").onclick=()=>$("#fileLogo").click();
+  $("#fileLogo").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
+    try{ const url=await ridimensionaLogo(f); modificaConfig("logo studio", c=>{ c.studio=Object.assign({},c.studio,{logo:url}); }); }catch(err){ toast("Immagine non valida: "+err.message,"err"); } };
+  if($("#btnNoLogo")) $("#btnNoLogo").onclick=()=>modificaConfig("logo rimosso", c=>{ c.studio=Object.assign({},c.studio,{logo:""}); });
   $("#btnCambia").onclick=async()=>{ S.store=null; S.demo=false; S.aziende.clear(); await idb.del("cartella"); location.hash=""; render(); };
   $("#btnBackup").onclick=()=>scarica(`backup_scadenzario_${oggiISO()}.json`, JSON.stringify({esportatoIl:oraISO(), config:S.config, aziende:[...S.aziende.values()]},null,1), "application/json");
   $("#btnInstall2").onclick=installa;
   if($("#btnResetDemo")) $("#btnResetDemo").onclick=async()=>{ if(!confirm("Azzerare i dati demo?")) return; const root=await navigator.storage.getDirectory(); await root.removeEntry("demo-scadenzario",{recursive:true}); S.store=null; avviaDemo(); };
   $("#btnSoglie").onclick=()=>{ const u=parseInt($("#sUrg").value,10), t=parseInt($("#sAtt").value,10); if(!(u>0&&t>=u)){ toast("Soglie non valide","err"); return; }
     modificaConfig("soglie", c=>{ c.sogliaGiorni={urgente:u, attenzione:t}; }); };
+  // catalogo
   $$("[data-savecat]").forEach(b=>b.onclick=()=>{ const tr=b.closest("tr"), id=tr.dataset.cat; const v={};
     $$("[data-c]",tr).forEach(el=>v[el.dataset.c]= el.type==="checkbox"?el.checked : el.dataset.c==="periodicitaAnni" ? (el.value===""?null:Number(el.value)) : el.value.trim());
+    if(!v.nome){ toast("Il nome non può essere vuoto","err"); return; }
     modificaConfig("catalogo "+id, c=>{ const x=c.catalogo.find(x=>x.id===id); if(x) Object.assign(x,v); }); });
+  $$("[data-mv]").forEach(b=>b.onclick=()=>{ const id=b.closest("tr").dataset.cat, dir=Number(b.dataset.mv);
+    modificaConfig("ordine catalogo", c=>{ const arr=c.catalogo, i=arr.findIndex(x=>x.id===id); if(i<0) return false; const s=sezDiItem(arr[i]);
+      let j=i+dir; while(j>=0&&j<arr.length&&sezDiItem(arr[j])!==s) j+=dir; if(j<0||j>=arr.length) return false; [arr[i],arr[j]]=[arr[j],arr[i]]; }); });
+  $$("[data-hide]").forEach(b=>b.onclick=()=>{ const id=b.closest("tr").dataset.cat, x=catById(id);
+    if(!x.nascosto && !confirm(`Nascondere “${x.nome}” in tutte le aziende? I dati restano salvati e puoi ripristinarlo quando vuoi.`)) return;
+    modificaConfig((x.nascosto?"ripristinato ":"nascosto ")+id, c=>{ const y=c.catalogo.find(y=>y.id===id); if(y) y.nascosto=!y.nascosto; }); });
+  $$("[data-delcat]").forEach(b=>b.onclick=()=>{ const id=b.closest("tr").dataset.cat, x=catById(id);
+    if(cidConStorico().has(id)){ toast("Ci sono date registrate: puoi solo nasconderlo.","err"); return; }
+    if(!confirm(`Eliminare definitivamente “${x.nome}” dal catalogo?`)) return;
+    modificaConfig("eliminato "+id, c=>{ c.catalogo=c.catalogo.filter(y=>y.id!==id); }); });
   $("#btnAddCat").onclick=async()=>{ const r=await dialogo({titolo:"Nuovo adempimento", corpo:`<div class="form"><label class="full">Nome<input name="nome" required autofocus></label>
       <label>Sezione<select name="sez">${sezioni().map(s=>`<option value="${s.id}">${esc(s.nome)}</option>`).join("")}</select></label>
-      <label>Periodicità (anni, vuoto = nessuna)<input name="per" type="number" min="0" step="0.5"></label><label class="full">Riferimento normativo<input name="rif"></label></div>`, ok:"Aggiungi"});
+      <label>Periodicità (anni, vuoto = nessuna)<input name="per" type="number" min="0" step="0.25"></label><label class="full">Riferimento normativo<input name="rif"></label>
+      <label class="check full"><input type="checkbox" name="nonGestito"> Di norma la scadenza NON è in carico allo studio</label></div>`, ok:"Aggiungi"});
     if(!dialogoOk(r)||!r.nome.trim()) return;
     modificaConfig("nuovo adempimento", c=>{ let id=slug(r.nome),n=2; while(c.catalogo.some(x=>x.id===id)) id=slug(r.nome)+"-"+(n++);
-      c.catalogo.push({id, nome:r.nome.trim(), sezione:r.sez, periodicitaAnni:r.per===""?null:Number(r.per), riferimento:r.rif.trim(), prassi:false}); }); };
+      c.catalogo.push({id, nome:r.nome.trim(), sezione:r.sez, periodicitaAnni:r.per===""?null:Number(r.per), riferimento:r.rif.trim(), prassi:false, nonGestito:!!r.nonGestito}); }); };
+  // modifica in blocco
+  const info=()=>{ const t=bersagliBulk($("#bkCid").value,$("#bkAmbito").value,$("#bkCond").value); $("#bkInfo").textContent=`Interessa ${t.reduce((n,x)=>n+x.vids.length,0)} voci in ${t.length} aziende.`; };
+  ["#bkCid","#bkAmbito","#bkCond"].forEach(s=>$(s).onchange=info); info();
+  $("#btnBulk").onclick=async()=>{
+    const cid=$("#bkCid").value, amb=$("#bkAmbito").value, cond=$("#bkCond").value, az=$("#bkAzione").value;
+    const t=bersagliBulk(cid,amb,cond), nv=t.reduce((n,x)=>n+x.vids.length,0), cat=catById(cid);
+    const lbl=$("#bkAzione").selectedOptions[0].textContent;
+    if(!nv){ toast("Nessuna voce corrisponde ai criteri","err"); return; }
+    if(!await chiediUtente()) return;
+    if(!confirm(`${cat.nome}: impostare “${lbl}” su ${nv} voci in ${t.length} aziende?`)) return;
+    let ok=0;
+    for(const {a,vids} of t){
+      const r=await modifica(a.id, `Modifica in blocco – ${cat.nome}: ${lbl}`, fresco=>{
+        let n=0; for(const vid of vids){ const v=voceMut(fresco,vid); if(!v||!condBulk(v,cond)) continue;
+          if(az==="si") v.gestione=true; else if(az==="no") v.gestione=false; else if(az==="cat") delete v.gestione; else v.applicabilita=az; n++; }
+        if(!n) return false; }, {silenzioso:true});
+      if(r) ok++;
+      $("#bkInfo").textContent=`Aggiornamento in corso… ${ok}/${t.length}`;
+    }
+    toast(`Modifica in blocco completata: ${ok} aziende aggiornate`); render();
+  };
+}
+function ridimensionaLogo(file){
+  return new Promise((res,rej)=>{
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{ const maxW=480, maxH=160, k=Math.min(1,maxW/img.width,maxH/img.height); const c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round((img.width||maxW)*k)); c.height=Math.max(1,Math.round((img.height||maxH)*k));
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url); res(c.toDataURL("image/png")); };
+    img.onerror=()=>{ URL.revokeObjectURL(url); rej(new Error("formato non supportato")); };
+    img.src=url;
+  });
 }
 async function cambiaUtente(){ const u=S.utente; S.utente=""; if(!await chiediUtente()) S.utente=u; aggiornaStato(); if(S.store) render(); }
 
 function bind(r,arg){
-  $$("[data-reg]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); e.preventDefault(); const [id,cid]=b.dataset.reg.split("|"); registraAggiornamento(id,cid); });
+  $$("[data-reg]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); e.preventDefault(); const [id,vid]=b.dataset.reg.split("|"); registraAggiornamento(id,vid); });
+  $$("[data-goto]").forEach(a=>a.onclick=e=>{ e.preventDefault(); const [id,vid]=a.dataset.goto.split("|"); apriVoce(id,vid); });
   if(r==="aziende") bindAziende(); else if(r==="azienda") bindAzienda(arg); else if(r==="calendario") bindCalendario(); else if(r==="matrice") bindMatrice(); else if(r==="impostazioni") bindImpostazioni(); else bindScadenze();
 }
 
@@ -1138,25 +1427,33 @@ function configBase(){
   ["mud","MUD (dichiarazione rifiuti)",1,"L. 70/1994 – presentazione annuale entro il 30 aprile (rifiuti anno precedente)",false],
   ["fgas","F-gas: controllo perdite",1,"Reg. (UE) 2024/573 art. 5 – 12, 6 o 3 mesi in base alle t CO2 eq; dichiarazione annuale DPR 146/2018 art. 16",false],
   ["acustica","Valutazione impatto acustico",null,"L. 447/1995 art. 8 – da rifare a modifiche di impianti/attività, nessuna scadenza fissa",false]];
-  return {versioneFormato:2, sezioni:SEZIONI_BASE.map(s=>({...s})), catalogo:C.map(([id,nome,p,rif,pr])=>({id,nome,sezione:SEZ_DEFAULT[id]||"altro",periodicitaAnni:p,riferimento:rif,prassi:pr})), sogliaGiorni:{urgente:30,attenzione:180}, _meta:{versione:1,modificatoIl:oraISO(),modificatoDa:"setup"}};
+  return {versioneFormato:3, studio:{nome:"Progetto Impresa", logo:""}, sezioni:SEZIONI_BASE.map(s=>({...s})),
+    catalogo:C.map(([id,nome,p,rif,pr])=>Object.assign({id,nome,sezione:SEZ_DEFAULT[id]||"altro",periodicitaAnni:p,riferimento:rif,prassi:pr}, id==="sollevamento"?{nonGestito:true}:{})),
+    sogliaGiorni:{urgente:30,attenzione:180}, _meta:{versione:1,modificatoIl:oraISO(),modificatoDa:"setup"}};
 }
 function datiDemo(){
   const fa=(anni,giorni=0)=>{ const d=new Date(); d.setFullYear(d.getFullYear()-anni); d.setDate(d.getDate()-giorni); return isoDi(d); };
-  const R=(data,rev,note="",stato="C")=>({id:uid(),data,rev:String(rev),prot:"",stato,note});
-  const base=(id,nome,rspp,ad,extra={})=>Object.assign({id,nome,attiva:true,rsppStudio:rspp,referente:"",ateco:"",soggettaCPI:"",rischioIncendio:"",classificazionePS:"",note:"",
-    adempimenti:Object.fromEntries(configBase().catalogo.map(c=>[c.id,ad[c.id]||{applicabilita:"np",storico:[],note:""}])),
-    _meta:{versione:1,modificatoIl:oraISO(),modificatoDa:"demo"}, registro:[{quando:oraISO(),chi:"demo",cosa:"Dati di esempio"}]},extra);
-  const A=(...st)=>({applicabilita:"attivo",storico:st,note:""}), D={applicabilita:"nel_dvr",storico:[],note:""};
-  const EXT=(nota,...st)=>({applicabilita:"attivo",gestione:false,storico:st,note:nota});
+  const R=(data,rev,note="",stato="C")=>({id:"r"+uid(),data,rev:String(rev),prot:"",stato,note});
+  const V=(cid,o)=>Object.assign({id:cid,cid,applicabilita:"attivo",storico:[],note:""},o);
+  const A=(cid,...st)=>V(cid,{storico:st});
+  const base=(id,nome,rspp,voci,extra={})=>Object.assign({id,nome,attiva:true,rsppStudio:rspp,referente:"",ateco:"",soggettaCPI:"",rischioIncendio:"",classificazionePS:"",note:"",
+    formato:2, voci, _meta:{versione:1,modificatoIl:oraISO(),modificatoDa:"demo"}, registro:[{quando:oraISO(),chi:"demo",cosa:"Dati di esempio"}]},extra);
   return [
-    base("officine-alfa","OFFICINE ALFA SRL",true,{dvr:A(R(fa(5),2),R(fa(3,350),3,"Nuovo RSPP")),rumore:A(R(fa(4,-20),1)),vibrazioni:A(R(fa(4,10),1)),chimico:A(R(fa(2,200),2)),slc:A(R(fa(1,300),1)),terra:EXT("Gestita dal manutentore elettrico",R(fa(4,330),"","Verbale ente notificato")),riunione:A(R(fa(1,5),"")),evacuazione:A(R(fa(0,200),"")),vdt:D,mmc:D,aua:A(R(fa(9),"","Determina provinciale")),emissioni:A(R(fa(0,345),"","Campionamento E1-E3")),mud:A(R(fa(0,210),"")),fgas:EXT("Gestito dal frigorista",R(fa(0,150),"","Chiller reparto"))},{ateco:"25.62",soggettaCPI:"SI",rischioIncendio:"Liv. 2",classificazionePS:"Gruppo B",referente:"Mario"}),
-    base("carpenteria-beta","CARPENTERIA BETA SNC",true,{dvr:A(R(fa(1),5)),rumore:A(R(fa(1),2)),vibrazioni:A(R(fa(1),2)),roa:A(R(fa(3,340),0,"Saldatura")),cem:A(R(fa(3,340),0)),sollevamento:{applicabilita:"attivo",storico:[R(fa(1,355),"","Carroponte 5 t")],note:"",periodicitaAnni:1},cpi:EXT("Pratica seguita dal professionista antincendio",R(fa(4,300),"","Attestazione rinnovo"))},{ateco:"25.11",soggettaCPI:"SI",referente:"Giulia"}),
-    base("panificio-gamma","PANIFICIO GAMMA",false,{dvr:A(R(fa(2),1)),haccp:A(R(fa(3,20),2)),evacuazione:{applicabilita:"attivo",storico:[],note:""},slc:A(R(fa(2,40),1)),mmc:A(R(fa(2),1))},{ateco:"10.71",referente:"Giulia"}),
-    base("studio-delta","STUDIO DELTA ASSOCIATI",true,{dvr:A(R(fa(0,100),3)),vdt:A(R(fa(0,100),1)),slc:A(R(fa(1,100),1)),pe:A(R(fa(2),1))},{ateco:"69.20",referente:"Mario"}),
-    base("edilizia-epsilon","EDILIZIA EPSILON SPA",true,{dvr:A(R(fa(3,360),4)),rumore:A(R(fa(3,355),2)),vibrazioni:A(R(fa(3,355),2)),chimico:A(R(fa(2,350),1)),terra:{applicabilita:"attivo",storico:[R(fa(1,340),"","Cantiere")],note:"Cantiere: biennale",periodicitaAnni:2},amianto:A(R(fa(0,350),"","Copertura capannone")),riunione:A(R(fa(0,300),""))},{ateco:"41.20",soggettaCPI:"NO",referente:"Mario"}),
-    base("logistica-zeta","LOGISTICA ZETA SRL",false,{dvr:A(R(fa(4,60),1)),mmc:A(R(fa(4,60),1)),sollevamento:{applicabilita:"da_gestire",storico:[],note:"Muletti: verificare"},atex:{applicabilita:"attivo",storico:[],note:"Locale ricarica batterie"}},{ateco:"52.10"}),
-    base("ristorante-eta","RISTORANTE ETA",false,{dvr:A(R(fa(1,200),2)),haccp:A(R(fa(1,30),1)),evacuazione:A(R(fa(0,330),""))},{ateco:"56.10",referente:"Luca"}),
-    base("meccanica-theta","MECCANICA THETA SRL",true,{dvr:A(R(fa(0,20),6)),rumore:A(R(fa(0,20),3)),vibrazioni:A(R(fa(0,20),3)),chimico:A(R(fa(0,20),2)),slc:A(R(fa(0,20),2)),terra:A(R(fa(0,400),"")),riunione:A(R(fa(0,40),""))},{ateco:"28.41",referente:"Luca"}),
+    base("officine-alfa","OFFICINE ALFA SRL",true,[A("dvr",R(fa(5),2),R(fa(3,350),3,"Nuovo RSPP")),A("rumore",R(fa(4,-20),1)),A("vibrazioni",R(fa(4,10),1)),A("chimico",R(fa(2,200),2,"Aggiornate SDS vernici")),A("slc",R(fa(1,300),1)),
+      V("terra",{gestione:false,note:"Gestita dal manutentore elettrico",storico:[R(fa(4,330),"","Verbale ente notificato")]}),A("riunione",R(fa(1,5),"")),A("evacuazione",R(fa(0,200),"")),V("vdt",{applicabilita:"nel_dvr"}),V("mmc",{applicabilita:"nel_dvr"}),
+      A("aua",R(fa(9),"","Determina provinciale")),A("emissioni",R(fa(0,345),"","Campionamento E1-E3")),A("mud",R(fa(0,210),"")),V("fgas",{gestione:false,note:"Gestito dal frigorista",storico:[R(fa(0,150),"","Chiller reparto")]}),
+      A("scia",R(fa(4,200),"","Attività 70.1.B")),V("scia-2",{cid:"scia",etichetta:"Deposito via Roma",storico:[R(fa(4,340),"","Attività 34.1.B")]})],
+      {ateco:"25.62",soggettaCPI:"SI",rischioIncendio:"Liv. 2",classificazionePS:"Gruppo B",referente:"Mario"}),
+    base("carpenteria-beta","CARPENTERIA BETA SNC",true,[A("dvr",R(fa(1),5)),A("rumore",R(fa(1),2)),A("vibrazioni",R(fa(1),2)),A("roa",R(fa(3,340),0,"Saldatura")),A("cem",R(fa(3,340),0)),
+      V("sollevamento",{etichetta:"Carroponte 5 t",gestione:true,periodicitaAnni:1,storico:[R(fa(1,355),"","Verifica INAIL")]}),V("sollevamento-2",{cid:"sollevamento",etichetta:"Muletto Linde",storico:[R(fa(0,200),"","Verifica soggetto abilitato")]}),
+      V("cpi",{gestione:false,note:"Pratica seguita dal professionista antincendio",storico:[R(fa(4,300),"","Attestazione rinnovo")]})],{ateco:"25.11",soggettaCPI:"SI",referente:"Giulia"}),
+    base("panificio-gamma","PANIFICIO GAMMA",false,[A("dvr",R(fa(2),1)),A("haccp",R(fa(3,20),2)),V("evacuazione",{}),A("slc",R(fa(2,40),1)),A("mmc",R(fa(2),1))],{ateco:"10.71",referente:"Giulia"}),
+    base("studio-delta","STUDIO DELTA ASSOCIATI",true,[A("dvr",R(fa(0,100),3)),A("vdt",R(fa(0,100),1)),A("slc",R(fa(1,100),1)),A("pe",R(fa(2),1))],{ateco:"69.20",referente:"Mario"}),
+    base("edilizia-epsilon","EDILIZIA EPSILON SPA",true,[A("dvr",R(fa(3,360),4)),A("rumore",R(fa(3,355),2)),A("vibrazioni",R(fa(3,355),2)),A("chimico",R(fa(2,350),1)),
+      V("terra",{note:"Cantiere: biennale",periodicitaAnni:2,storico:[R(fa(1,340),"","Cantiere")]}),A("amianto",R(fa(0,350),"","Copertura capannone")),A("riunione",R(fa(0,300),""))],{ateco:"41.20",soggettaCPI:"NO",referente:"Mario"}),
+    base("logistica-zeta","LOGISTICA ZETA SRL",false,[A("dvr",R(fa(4,60),1)),A("mmc",R(fa(4,60),1)),V("sollevamento",{applicabilita:"da_gestire",note:"Muletti: verificare"}),V("atex",{note:"Locale ricarica batterie"})],{ateco:"52.10"}),
+    base("ristorante-eta","RISTORANTE ETA",false,[A("dvr",R(fa(1,200),2)),A("haccp",R(fa(1,30),1)),A("evacuazione",R(fa(0,330),""))],{ateco:"56.10",referente:"Luca"}),
+    base("meccanica-theta","MECCANICA THETA SRL",true,[A("dvr",R(fa(0,20),6)),A("rumore",R(fa(0,20),3)),A("vibrazioni",R(fa(0,20),3)),A("chimico",R(fa(0,20),2)),A("slc",R(fa(0,20),2)),A("terra",R(fa(0,400),"")),A("riunione",R(fa(0,40),""))],{ateco:"28.41",referente:"Luca"}),
   ];
 }
 
@@ -1170,6 +1467,9 @@ $("#btnMenu").onclick=()=>document.body.classList.toggle("menu-open");
 $("#scrim").onclick=()=>document.body.classList.remove("menu-open");
 $("#btnRefresh").onclick=async()=>{ if(!S.store) return; await caricaTutto(true); if(!S.dirty) render(); toast("Dati riletti dalla cartella"); };
 $("#userChip").onclick=cambiaUtente;
+$("#cercaAz").addEventListener("change",e=>{ const n=e.target.value.trim().toLowerCase(); if(!n) return;
+  const a=[...S.aziende.values()].find(a=>a.nome.toLowerCase()===n) || [...S.aziende.values()].find(a=>a.nome.toLowerCase().includes(n));
+  if(a){ e.target.value=""; e.target.blur(); location.hash="#/azienda/"+encodeURIComponent(a.id); } else toast("Nessuna azienda trovata","err"); });
 setInterval(poll, POLL_MS);
 document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) poll(); });
 window.addEventListener("beforeunload", e=>{ if(S.dirty){ e.preventDefault(); e.returnValue=""; } });
