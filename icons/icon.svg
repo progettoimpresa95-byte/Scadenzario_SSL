@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2fb36f"/>
+      <stop offset="1" stop-color="#0d5c3a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <!-- calendario -->
+  <rect x="104" y="128" width="304" height="264" rx="36" fill="#ffffff"/>
+  <rect x="104" y="128" width="304" height="72" rx="36" fill="#d7f3e3"/>
+  <rect x="104" y="170" width="304" height="30" fill="#d7f3e3"/>
+  <rect x="164" y="96" width="28" height="72" rx="14" fill="#ffffff"/>
+  <rect x="320" y="96" width="28" height="72" rx="14" fill="#ffffff"/>
+  <!-- scudo con spunta -->
+  <path d="M256 222 l76 30 v50 c0 46 -32 80 -76 96 c-44 -16 -76 -50 -76 -96 v-50 z" fill="#1f8a5b"/>
+  <path d="M222 304 l24 24 l46 -48" fill="none" stroke="#ffffff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- foglia: ambiente -->
+  <circle cx="398" cy="394" r="74" fill="#ffffff"/>
+  <circle cx="398" cy="394" r="62" fill="#7bd389"/>
+  <path d="M360 432 C356 378 392 348 440 350 C444 404 412 434 360 432 Z" fill="#0f6b43"/>
+  <path d="M366 426 L418 374" stroke="#7bd389" stroke-width="8" stroke-linecap="round"/>
+</svg>
